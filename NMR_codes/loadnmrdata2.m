@@ -3,16 +3,22 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
     % variables. 
     
     if strcmp(name, 'A1') ==0 && strcmp(name, 'C1') == 0 && strcmp(name, 'gems_all') ==0 && strcmp(name, 'all_data') == 0
-        in=(['..' filesep '..' filesep 'Data' filesep 'Aggregated_data' filesep name '.txt']);               %define the datafile name
+        baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/NMR-K-prediction/';
+        in=([baseDir filesep 'Data' filesep 'Aggregated_data' filesep name '.txt']);               %define the datafile name
         d=load(in);                         %load the raw data
         K= d(:,4);                %convert direct data to K in [m filesep s] 
         T2ML=d(:,2);                        %determine range of T2ML data, converts Vista Clara to [ms]
         phi=d(:,3);                         %determine range of NMR PHI data
         z=d(:,1);                           %depth
         SumEch = d(:,5);                    %Back out raw sum of echoes value from vista clara processed data
-        SumEch_3s = d(:,6); 
-        SumEch_twm = d(:,7); 
-        SumEch_twm_3s = d(:,8); 
+        
+        SumEch_3s = 0;
+        SumEch_twm = 0;
+        SumEch_twm_3s = 0;
+        
+%         SumEch_3s = d(:,6); 
+%         SumEch_twm = d(:,7); 
+%         SumEch_twm_3s = d(:,8); 
             
         log10K = log10(K); 
         log10T2 = log10(T2ML); 

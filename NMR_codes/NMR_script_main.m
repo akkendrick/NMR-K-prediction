@@ -42,15 +42,16 @@
 %% Load Data
 clear
 
-name = 'A1'; 
+%name = 'A1'; 
+name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1'
 
 % load data file
 [d, K, T2ML, phi, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
     SumEch_twm_3s] = loadnmrdata2(name); 
 logSumEch = log10(SumEch); 
-logSumEch_3s = log10(SumEch_3s); 
-logSumEch_twm = log10(SumEch_twm); 
-logSumEch_twm_3s = log10(SumEch_twm_3s); 
+% logSumEch_3s = log10(SumEch_3s); 
+% logSumEch_twm = log10(SumEch_twm); 
+% logSumEch_twm_3s = log10(SumEch_twm_3s); 
     
 % %%%%%%%%% Change T2 variable to Sum of Echoes for the inversions. 
 % logT2ML = logSumEch_3s; 
@@ -74,7 +75,7 @@ end
 % 4 - SOE - time-weighted mean
 % 5 - SOE - 3 second time-weighted mean
 
-vars = [logT2ML, log10(SumEch), log10(SumEch_3s), log10(SumEch_twm), log10(SumEch_twm_3s)]; 
+vars = [logT2ML, log10(SumEch)]%, log10(SumEch_3s), log10(SumEch_twm), log10(SumEch_twm_3s)]; 
 numvars = size(vars, 2);
 for i = 1:numvars
     var = vars(:,i); 
@@ -204,7 +205,7 @@ n = 2;  % fixed n
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if figureson == 1
-    graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
+    %graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
     all_lKpreds = zeros(length(T2ML), length(b_mcmc)); 
     for k = 1:length(b_mcmc)
         bbm = [b_mcmc(k), sig_mcmc(k)]; 

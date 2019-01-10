@@ -15,16 +15,16 @@ end
     minsig = 1e-5; 
     maxsig = inf; 
     
-    maxT2B = 4;
-    minT2B = 1.5;
+   % maxT2B = 4;
+   % minT2B = 1.5;
 
-   % bounds = [minlogb, maxlogb; minsig, maxsig]; 
-   bounds = [minlogb, maxlogb; minsig, maxsig; minT2B, maxT2B];
+    bounds = [minlogb, maxlogb; minsig, maxsig]; 
+   %bounds = [minlogb, maxlogb; minsig, maxsig; minT2B, maxT2B];
    
     k = 100; 
     bcut = 100; 
-    %x_init = [-2, 1]'; 
-    x_init = [-2,1,2.5]';
+    x_init = [-2, 1]'; 
+    %x_init = [-2,1,2.5]';
 
     % determine which equation to use: 
     % ip = 0        % no T2B or porosity, log space

@@ -3,7 +3,7 @@ function [loglike, lkpred, likelihood] = NMRfun2(x, Dk, phi, T2, m, n)
         logb = x(1); 
         sig = x(2); 
         
-        T2B = x(3);
+       % T2B = x(3);
         
         kk = log10(Dk); 
         lphi = log10(phi);

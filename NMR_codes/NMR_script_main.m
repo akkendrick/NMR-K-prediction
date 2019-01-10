@@ -41,12 +41,13 @@
 
 %% Load Data
 clear
+close all
 
-name = 'dpnmr_larned_east'; 
+%name = ''; 
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
 %name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
-%name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
 %name = 'wisc_all';
 %name = 'plainfield_all';
 %name = 'all_data';
@@ -97,8 +98,8 @@ xlim([0.5, 5.5])
 % n*log(T2ML). This is the 'direct' method.
 
 C = @(m, n, lt, lp) m*lp + n*lt; 
-n = 1;
-m= 0; 
+n = 2;
+m = 4; 
 bdir_n1 = logK - C(m, n, logT2ML, logPhi); 
 
 n = 2; 
@@ -160,15 +161,15 @@ end
 
 % m assumed 0; 
 n = 2; 
-m = 1; 
+m = 4; 
 Nboot =  2000; % number of bootstrap samples
 
 % Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
 % single matrix
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
- [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
-% [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot, n, m);   % m, n fixed
+% [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+ [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
 
 if figureson ==1 
     bs = log10(b_boot); 
@@ -206,8 +207,11 @@ sig_mcmc = paramhats(5,:);
 
 % %%%%%%%%%%%%%% MCMC for b and data error only. n is fixed and m is assumed zero. 
 n = 2;  % fixed n
-[b_mcmc, sig_mcmc, likes, accept_rat] = mcmc_nmr_bsig (K, T2ML, phi, z, n, ...
+m = 4;
+
+[b_mcmc, sig_mcmc, likes, accept_rat] = mcmc_nmr_bsig (K, T2ML, phi, z, m, n, ...
     Niter, stepsize, figureson); 
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if figureson == 1
@@ -215,7 +219,7 @@ if figureson == 1
     all_lKpreds = zeros(length(T2ML), length(b_mcmc)); 
     for k = 1:length(b_mcmc)
         bbm = [b_mcmc(k), sig_mcmc(k)]; 
-        [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, T2ML, n); 
+        [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, phi, T2ML, m, n); 
     end
     hold on
     for k = 1:size(all_lKpreds,1)
@@ -253,3 +257,4 @@ names = {'MCMC', 'Bootstrap', 'Direct', 'Analytical SE'};
 figure; hold on
 boxplot(X, names, 'colors', 'rgbk')
 ylabel('b')
+ylim([0,10])

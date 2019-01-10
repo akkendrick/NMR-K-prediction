@@ -2,8 +2,13 @@
 
 clear
 
-all_names = {'A1', 'C1', 'dpnmr_leque_east', 'dpnmr_leque_west', ...
-  'dpnmr_larned_east', 'dpnmr_larned_west', 'dpnmr_larned_lwph'}; 
+% all_names = {'A1', 'C1', 'dpnmr_larned_east', 'dpnmr_larned_west', ...
+%   'dpnmr_larned_lwph', 'dpnmr_leque_east', 'dpnmr_leque_west'}; 
+
+all_names = { 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1', ...
+    'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1', ...
+    'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1', ...
+    'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'};
 
 figureson = 1;
 
@@ -37,9 +42,15 @@ for k = 1:length(all_names)
     end
     
     
-    meanb(k) = mean(b_boot)
+    meanb(k) = mean(b_boot);
     sortb = sort(b_boot); 
-    blo(k) = sortb(50)
-    bhi(k) = sortb(1950)
+    blo(k) = sortb(50);
+    bhi(k) = sortb(1950);
+    
+    medianb(k) = median(b_boot);
     
 end
+
+all_names
+meanb
+medianb

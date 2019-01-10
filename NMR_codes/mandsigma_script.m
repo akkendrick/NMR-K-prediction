@@ -1,13 +1,13 @@
 %% Script to estimate m and sigma at each site
 
 % use each individual well
-all_names = {'A1', 'C1', 'dpnmr_leque_east', 'dpnmr_leque_west', ...
-  'dpnmr_larned_east', 'dpnmr_larned_west', 'dpnmr_larned_lwph'}; 
+%all_names = {'A1', 'C1', 'dpnmr_larned_east', 'dpnmr_larned_west', ...
+%  'dpnmr_larned_lwph', 'dpnmr_leque_east', 'dpnmr_leque_west'}; 
 
-% all_names = {'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1', ...
-%     'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1', ...
-%     'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1', ...
-%     'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'};
+all_names = { 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1', ...
+    'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1', ...
+    'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1', ...
+    'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'};
 
 % use each site
 % all_names = {'dpnmr_larned_all', 'dpnmr_leque_all', 'gems_all'}; 
@@ -52,6 +52,9 @@ end
 %% Compute b statistics from fixed n and m data
 logb_mean = mean(b_fixed);
 b_mean = 10.^logb_mean
+
+logb_median = median(b_fixed);
+b_median = 10.^logb_median
 
 
 %% Plotting

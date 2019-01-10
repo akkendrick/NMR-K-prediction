@@ -2,8 +2,8 @@
 
 clear
 
-all_names = {'A1', 'C1', 'dpnmr_leque_east', 'dpnmr_leque_west', ...
-  'dpnmr_larned_east', 'dpnmr_larned_west', 'dpnmr_larned_lwph'}; 
+all_names = {'A1', 'C1', 'dpnmr_larned_east', 'dpnmr_larned_west', ...
+  'dpnmr_larned_lwph', 'dpnmr_leque_east', 'dpnmr_leque_west'}; 
 
 figureson = 1;
 

@@ -42,7 +42,7 @@
 %% Load Data
 clear
 
-name = 'C1'; 
+name = 'dpnmr_larned_east'; 
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
 %name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';

@@ -99,6 +99,9 @@ ylabel('Residual')
 set(gcf,'OuterPosition',[100 100 1000 800], 'PaperPositionMode','auto','color',[1 1 1])
 
 % output best b values
-bs = [bspace(ii); bestb(:)]; 
-ms = [mspace(jj); [0,1, 2, 4]']; 
+% bs = [bspace(ii); bestb(:)]; 
+% ms = [mspace(jj); [0,1, 2, 4]']; 
+bs = [log10(bspace(jj)); bestb(:)];
+ms = [mspace(ii); [1, 2, 4, 0]'];
+
 end

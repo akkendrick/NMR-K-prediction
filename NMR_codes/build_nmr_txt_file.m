@@ -8,12 +8,17 @@ function [z, T2ML, phi, Dk, soe, soe_3s, soe_twm, soe_twm_3s,k_SDR_VC, t, S, Cap
 % in3 = [pwd '\bstrp_dat_original\' name '.txt'];
 
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
+%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
+%name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
+name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
 
 baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
-in1 = [baseDir 'Site1-WellG6/' name '/' name '_SE_decay' '.txt']; 
-in2 = [baseDir 'Site1-WellG6/' name '/' name '_1Dvectors.txt'];
-in3 = [baseDir 'Site1-WellG6/' name '/' 'G6_DPP.txt'];
-in4 = [baseDir 'Site1-WellG6/' name '/' name '_SE_decay_time.txt'];
+site = 'Site2-WellPN2';
+
+in1 = [baseDir site '/' name '/' name '_SE_decay' '.txt']; 
+in2 = [baseDir site '/' name '/' name '_1Dvectors.txt'];
+in3 = [baseDir site '/' name '/' strcat(site,'_DPP.txt')];
+in4 = [baseDir site '/' name '/' name '_SE_decay_time.txt'];
 
 decaycurve = load(in1); 
 dparam = dlmread(in2,'\t',1,0); 
@@ -29,7 +34,10 @@ z = dparam(:,1);
 
 S = decaycurve(:,2:end); 
 
-Dk = DPPdat(:,2); %m/d 
+%Dk = olddat(:,4)*1.16e-5; 
+%z_dk = olddat(:,1); 
+
+Dk = DPPdat(:,2)*1.16e-5; % converts K from m/day to m/s
 z_dk = DPPdat(:,1); 
 
 %% Match depths of permeability measurements from my old data

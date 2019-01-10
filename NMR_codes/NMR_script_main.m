@@ -42,8 +42,14 @@
 %% Load Data
 clear
 
-%name = 'A1'; 
-name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1'
+name = 'C1'; 
+%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
+%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
+%name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
+%name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+%name = 'wisc_all';
+%name = 'plainfield_all';
+%name = 'all_data';
 
 % load data file
 [d, K, T2ML, phi, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
@@ -161,7 +167,7 @@ Nboot =  2000; % number of bootstrap samples
 % single matrix
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
-[b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+ [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot, n, m);   % m, n fixed
 
 if figureson ==1 
@@ -200,18 +206,17 @@ sig_mcmc = paramhats(5,:);
 
 % %%%%%%%%%%%%%% MCMC for b and data error only. n is fixed and m is assumed zero. 
 n = 2;  % fixed n
-[b_mcmc, sig_mcmc, likes, accept_rat] = mcmc_nmr_bsig (K, T2ML, z, n, ...
+[b_mcmc, sig_mcmc, likes, accept_rat] = mcmc_nmr_bsig (K, T2ML, phi, z, n, ...
     Niter, stepsize, figureson); 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if figureson == 1
-    %graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
+    graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
     all_lKpreds = zeros(length(T2ML), length(b_mcmc)); 
     for k = 1:length(b_mcmc)
         bbm = [b_mcmc(k), sig_mcmc(k)]; 
         [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, T2ML, n); 
     end
-    figure; 
     hold on
     for k = 1:size(all_lKpreds,1)
         dpk = all_lKpreds(k,:); 

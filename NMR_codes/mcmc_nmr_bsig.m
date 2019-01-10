@@ -1,4 +1,4 @@
-function [b, sig, likes, accept_rat] = mcmc_nmr_bsig (Dk, T2ML, z, n, Niter, stepsize, figureson)
+function [b, sig, likes, accept_rat] = mcmc_nmr_bsig (Dk, T2ML, phi, z, m, n, Niter, stepsize, figureson)
 
 if nargin < 5
     if nargin < 4
@@ -14,18 +14,28 @@ end
     minlogb = -inf; 
     minsig = 1e-5; 
     maxsig = inf; 
+    
+    maxT2B = 4;
+    minT2B = 1.5;
 
-    bounds = [minlogb, maxlogb; minsig, maxsig]; 
+   % bounds = [minlogb, maxlogb; minsig, maxsig]; 
+   bounds = [minlogb, maxlogb; minsig, maxsig; minT2B, maxT2B];
+   
     k = 100; 
     bcut = 100; 
-    x_init = [-2, 1]'; 
+    %x_init = [-2, 1]'; 
+    x_init = [-2,1,2.5]';
 
     % determine which equation to use: 
     % ip = 0        % no T2B or porosity, log space
+    %  ip = 1        % T2B and porosity, log space
 
     % run mcmc
     [xhats, likes, lkpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun2, x_init, k, ...
-        bounds, [], [], bcut, [],Dk, T2ML, n);
+         bounds, [], [], bcut, [],Dk, phi, T2ML, m, n);
+
+%    [xhats, likes, lkpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun, x_init, k, ...
+%         bounds, [], [], bcut, [],Dk, phi, T2ML, ip);
 
     b = xhats(1,:); 
     sig = xhats(2,:); 
@@ -49,10 +59,10 @@ end
     pl(1) = 10^pl(1); 
     pu(1) = 10^pu(1); 
 
-    varnames = {'log10_b', 'sig_d'};
-    obsnames = {'MAP_values', 'Mean_values', 'SE', 'CI_Upper', 'CI_Lower'}; 
-    parammat = [[10^bestps(1), bestps(2)]; [meanvals(2:3)]'; [sdvals(:)]'; pu; pl]; 
-    SumP = dataset(parammat(:,1), parammat(:,2), 'VarNames', varnames, 'ObsNames', obsnames);
+%     varnames = {'log10_b', 'sig_d'};
+%     obsnames = {'MAP_values', 'Mean_values', 'SE', 'CI_Upper', 'CI_Lower'}; 
+%     parammat = [[10^bestps(1), bestps(2)]; [meanvals(2:3)]'; [sdvals(:)]'; pu; pl]; 
+%     SumP = dataset(parammat(:,1), parammat(:,2), 'VarNames', varnames, 'ObsNames', obsnames);
 
     %% Plotting
     if figureson == 1

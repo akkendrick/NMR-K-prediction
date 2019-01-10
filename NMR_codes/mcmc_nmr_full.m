@@ -3,8 +3,8 @@ kk = log10(Dk);
 
 % parameters to search over: T2B, b, n, m
 % set bounds on each parameter
-maxT2B = 15; 
-minT2B = 0; 
+maxT2B = 4; 
+minT2B = 1.5; 
 maxlogb = inf; 
 minlogb = -inf; 
 maxn = 4; 
@@ -18,15 +18,17 @@ bounds = [minT2B, maxT2B; minlogb, maxlogb; minn, maxn; ...
     minm, maxm; minsig, maxsig]; 
 k = 100; 
 bcut = 100; 
+%        [T2B, logb, n, m, sig]
 x_init = [2.5, -2, 2, 0, 1]'; 
 
-% determine which equation to use: 
-% ip = 0        % no T2B or porosity, log space
-% ip = 1        % T2B and porosity, log space
-% ip = 2        % T2B, no porosity, log space
-% ip = 3        % no T2B or porosity, real space - not stabile
 
-ip = 1;
+% determine which equation to use: 
+% ip = 0;        % no T2B or porosity, log space
+% ip = 1;        % T2B and porosity, log space
+% ip = 2;       % T2B, no porosity, log space
+% ip = 3;      % no T2B or porosity, real space - not stabile
+% ip = 4;      % full SDR
+ip = 4;
 
 % run mcmc
 [paramhats, likes, kpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun, x_init, k, ...

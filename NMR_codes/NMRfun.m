@@ -27,6 +27,8 @@ function [loglike, kpred, likelihood] = NMRfun(x, Dk, phi, T2, ip)
         kpred = logb + n*log10(T2);                    % without T2B
     elseif ip == 3
         kpred = logb*(T2.^n); 
+    elseif ip == 4
+        kpred = logb + m*lphi + n*log10(T2);           % Full SDR
     end
     
     r = kk - kpred;

@@ -6,7 +6,7 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
         baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/NMR-K-prediction/';
         in=([baseDir filesep 'Data' filesep 'Aggregated_data' filesep name '.txt']);               %define the datafile name
         d=load(in);                         %load the raw data
-        K= d(:,4);                %convert direct data to K in [m filesep s] 
+        K= d(:,4);                          %convert direct data to K in [m filesep s] 
         T2ML=d(:,2);                        %determine range of T2ML data, converts Vista Clara to [ms]
         phi=d(:,3);                         %determine range of NMR PHI data
         z=d(:,1);                           %depth
@@ -27,7 +27,7 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
     elseif strcmp(name, 'A1') ==1 
         str = ['..' filesep 'Data' filesep 'dpnmr_site_' name];
         try
-            load(str)
+            load(str) 
         catch
             keyboard;
         end
@@ -76,10 +76,11 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
         SumEch_3s = mean([SumEch_3s1, SumEch_3s2, d3(:,6)], 2); 
         SumEch_twm = mean([SumEch_twm1, SumEch_twm2, d3(:,7)], 2); 
         SumEch_twm_3s = mean([SumEch_twm_3s1, SumEch_twm_3s2, d3(:,8)], 2); 
-       
+        log10K = log10(K); 
+
     elseif strcmp(name, 'gems_all') ==1
         
-        str = ['..' filesep 'Data' filesep 'dpnmr_site_C1']; 
+        str = ['..' filesep 'Data' filesep 'dpnmr_site_C1.mat']; 
         load(str)
         str2 = ['..'  filesep 'Data' filesep 'Aggregated_data' filesep 'dpnmrC1S.txt']; 
         d2 = load(str2);
@@ -105,7 +106,7 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
         SumEchc = 10.^SOE; 
 
         clearvars -except zC T2C Dkc phic SumEchc SumEch_3sC SumEch_twmC SumEch_twm_3sC
-        str = ['Data' filesep 'dpnmr_site_A1']; 
+        str = ['..' filesep 'Data' filesep 'dpnmr_site_A1.mat']; 
         load(str)
         T2ML = T2; 
         SumEch = 10.^SOE; 
@@ -156,10 +157,15 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
         T2ML = [T2MLg; T2MLlar; T2MLleq]; 
         SumEch = [SumEchg; SumEchlar; SumEchleq];
         phi = [phig; philar; phileq];
-        SumEch_3s = [SumEch_3sg; SumEch_3slar; SumEch_3sleq];
-        SumEch_twm = [SumEch_twmg; SumEch_twmlar; SumEch_twmleq];
-        SumEch_twm_3s = [SumEch_twm_3sg; SumEch_twm_3slar; SumEch_twm_3sleq];
-        d = [z, T2ML, phi, K, SumEch, SumEch_3s, SumEch_twm, SumEch_twm_3s]; 
+     %   SumEch_3s = [SumEch_3sg; SumEch_3slar; SumEch_3sleq];
+      %  SumEch_twm = [SumEch_twmg; SumEch_twmlar; SumEch_twmleq];
+      %  SumEch_twm_3s = [SumEch_twm_3sg; SumEch_twm_3slar; SumEch_twm_3sleq];
+        SumEch_3s = 0;
+        SumEch_twm = 0;
+        SumEch_twm_3s = 0;
+        
+      
+        d = [z, T2ML, phi, K, SumEch]%, SumEch_3s, SumEch_twm, SumEch_twm_3s]; 
         
         log10T2 = log10(T2ML); 
         log10Porosity = log10(phi); 

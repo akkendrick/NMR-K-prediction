@@ -41,13 +41,24 @@
 
 %% Load Data
 clear
-close all
+%close all
 
 %name = ''; 
-%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
+%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
+%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
+
+%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
+%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below';
+%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
+
+%name = 'G5G6_aboveClay'
+name = 'G5G6_belowClay'
+
 %name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
-name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+%name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+
+
 %name = 'wisc_all';
 %name = 'plainfield_all';
 %name = 'all_data';
@@ -65,8 +76,10 @@ logSumEch = log10(SumEch);
 % T2ML = SumEch; 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Turn figures on or off
 figureson = 1; 
+
+
+%% Turn figures on or off
 if figureson == 1
     figure; scatter(logT2ML, logK, 'o')
     nums = 1:length(logT2ML);
@@ -168,14 +181,15 @@ Nboot =  2000; % number of bootstrap samples
 % single matrix
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
-% [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
- [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
+ [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+% [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
 
 if figureson ==1 
     bs = log10(b_boot); 
     graph_correlations([bs, n_boot], 2, {'log_{10}(b)', 'n'}, 1, 0)
 end
 meanb = mean(b_boot)
+medianb = median(b_boot)
 sortb = sort(b_boot); 
 blo = sortb(50)
 bhi = sortb(1950)
@@ -230,6 +244,13 @@ if figureson == 1
     end
     scatter(log10(T2ML), logK, 'ok', 'filled')
 end
+
+% Compute b statistics from fixed n and m data
+logb_mean = mean(b_mcmc);
+b_mean = 10.^logb_mean
+
+logb_median = median(b_mcmc);
+b_median = 10.^logb_median
 
 %% Compare all results
 % create a matrix to plot and compare all results

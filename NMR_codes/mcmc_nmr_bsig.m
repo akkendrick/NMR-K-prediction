@@ -69,6 +69,6 @@ end
         names = {'log_{10}(b)', '\sigma'}; 
         graph_correlations(xhats,1, names, 1, 0)
         
-        plotKwithz2(kk, z, lkpreds)
+   %     plotKwithz2(kk, z, lkpreds)
     end
 end

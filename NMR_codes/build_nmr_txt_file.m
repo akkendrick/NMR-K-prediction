@@ -17,7 +17,7 @@ site = 'Site2-WellPN2';
 
 in1 = [baseDir site '/' name '/' name '_SE_decay' '.txt']; 
 in2 = [baseDir site '/' name '/' name '_1Dvectors.txt'];
-in3 = [baseDir site '/' name '/' strcat(site,'_DPP.txt')];
+in3 = [baseDir site '/' name '/' strcat(site,'_DPP_filt.txt')];
 in4 = [baseDir site '/' name '/' name '_SE_decay_time.txt'];
 
 decaycurve = load(in1); 

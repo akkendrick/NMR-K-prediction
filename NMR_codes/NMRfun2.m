@@ -2,7 +2,7 @@ function [loglike, lkpred, likelihood] = NMRfun2(x, Dk, phi, T2, m, n)
 % this function computes the likelihood for Kpredicted given K_measure
         logb = x(1); 
         sig = x(2); 
-        
+
        % T2B = x(3);
         
         kk = log10(Dk); 

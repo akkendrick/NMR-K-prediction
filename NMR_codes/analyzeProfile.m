@@ -4,8 +4,8 @@ clear
 
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1'
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1'
-%name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1'
-name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1'
+%name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
 
 site = 'Site2-WellPN2';
 

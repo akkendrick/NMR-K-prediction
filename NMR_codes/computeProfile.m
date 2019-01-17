@@ -1,15 +1,35 @@
-function [k_bootstrap,k_mcmc,bestFitMatrix,totalErrorEstimate] = computeProfile(site,n,m)
+function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,bestFitMatrix,totalErrorEstimate] = computeProfile(site,n,m,figureson)
 
 baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
 
 if strcmp(site,'Site1-WellG5')
     name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
+    nmrName = name;
+elseif  strcmp(site,'Site1-WellG5above')
+    site = 'Site1-WellG5';
+    name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
+    nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
+elseif  strcmp(site,'Site1-WellG5below')
+    site = 'Site1-WellG5';
+    name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
+    nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
 elseif strcmp(site,'Site1-WellG6')
     name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
+    nmrName = name;
+elseif strcmp(site,'Site1-WellG6above')
+    site = 'Site1-WellG6';
+    name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
+    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above'
+elseif strcmp(site,'Site1-WellG6below')
+    site = 'Site1-WellG6';
+    name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
+    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below'
 elseif strcmp(site,'Site2-WellPN1')
     name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
+    nmrName = name;
 elseif strcmp(site,'Site2-WellPN2')
     name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1';
+    nmrName = name;
 end
 
 in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
@@ -19,16 +39,17 @@ T2dist = load(in1);
 T2logbins = load(in2);
 
 [d, K, T2ML, phi, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
-SumEch_twm_3s] = loadnmrdata2(name); 
+SumEch_twm_3s] = loadnmrdata2(nmrName); 
 
 logSumEch = log10(SumEch);
 
 bestFitMatrix = zeros(3,3);
 totalErrorEstimate = zeros(1,3);
 
+
 %% Bootstrap
 
-Nboot =  2000; % number of bootstrap samples
+Nboot =  4000; % number of bootstrap samples
 
 % Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
 % single matrix
@@ -39,12 +60,18 @@ Nboot =  2000; % number of bootstrap samples
 %  [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);    % n and m can vary
 
 if isempty(n) && isempty(m)
-    b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);
+    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);
 else   
     [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
 end
-    
-bs = log10(b_boot); 
+
+if figureson ==1 
+    bs = log10(b_boot); 
+    graph_correlations([bs, n_boot], 2, {'log_{10}(b)', 'n'}, 1, 0)
+else
+    bs = log10(b_boot); 
+end
+
 
 meanb = mean(b_boot);
 sortb = sort(b_boot); 
@@ -159,26 +186,23 @@ else
 
 end
 
-
-
-
-
-% if figureson == 1
-%     graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
-%     all_lKpreds = zeros(length(T2ML), length(blog_mcmc)); 
+if figureson == 1
+    graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
+    all_lKpreds = zeros(length(T2ML), length(blog_mcmc));   
 %     for k = 1:length(blog_mcmc)
-%         bbm = [blog_mcmc(k), sig_mcmc(k)]; 
-%         [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, phi, T2ML, m, n); 
+%         bbm = [blog_mcmc(k), sig_mcmc(k)];
+%         [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, phi, T2ML, m, n);
 %     end
+%     figure;
 %     hold on
 %     for k = 1:size(all_lKpreds,1)
-%         dpk = all_lKpreds(k,:); 
-%         [h,x] = hist(dpk, 40); 
-%         t2m = repmat(log10(T2ML(k)), 1, length(x)); 
-%         scatter(t2m, x, [], h); 
+%         dpk = all_lKpreds(k,:);
+%         [h,x] = hist(dpk, 40);
+%         t2m = repmat(log10(T2ML(k)), 1, length(x));
+%         scatter(t2m, x, [], h);
 %     end
 %     scatter(log10(T2ML), logK, 'ok', 'filled')
-% end
+end
 
 %m_mcmc = 0;
 

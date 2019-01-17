@@ -43,7 +43,7 @@
 clear
 %close all
 
-%name = ''; 
+name = 'G5G6_belowClay' 
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
 %name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
@@ -53,7 +53,7 @@ clear
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
 
 %name = 'G5G6_aboveClay'
-name = 'G5G6_belowClay'
+%name = 'G5G6_belowClay'
 
 %name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
 %name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
@@ -181,8 +181,11 @@ Nboot =  2000; % number of bootstrap samples
 % single matrix
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
 % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
- [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+% [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
 % [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
+
+    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot); % n and m can vary
+
 
 if figureson ==1 
     bs = log10(b_boot); 
@@ -220,11 +223,11 @@ sig_mcmc = paramhats(5,:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % %%%%%%%%%%%%%% MCMC for b and data error only. n is fixed and m is assumed zero. 
-n = 2;  % fixed n
-m = 4;
-
-[b_mcmc, sig_mcmc, likes, accept_rat] = mcmc_nmr_bsig (K, T2ML, phi, z, m, n, ...
-    Niter, stepsize, figureson); 
+% n = 2;  % fixed n
+% m = 4;
+% 
+% [b_mcmc, sig_mcmc, likes, accept_rat] = mcmc_nmr_bsig (K, T2ML, phi, z, m, n, ...
+%     Niter, stepsize, figureson); 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -235,6 +238,7 @@ if figureson == 1
         bbm = [b_mcmc(k), sig_mcmc(k)]; 
         [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, phi, T2ML, m, n); 
     end
+    figure;
     hold on
     for k = 1:size(all_lKpreds,1)
         dpk = all_lKpreds(k,:); 

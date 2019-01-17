@@ -1,4 +1,4 @@
-function plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names)
+function plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -16,7 +16,7 @@ function plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names)
     
     view(0,90)
     set(gca, 'YDir','reverse')
-    ylim([min(depths),max(z)])
+    ylim([min(depths),max(depths)])
     xlim([min(T2logbins),max(T2logbins)])
     ylabel('Depth (m)')
     xlabel('log_{10} T_2 (s)')
@@ -34,18 +34,18 @@ function plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names)
     grid on
     
     hold on
-    plot(K,z,'+','MarkerSize',4)
+    plot(K,z,'*','MarkerSize',8)
 
     [nrow, ncol] = size(k_estimates);
     for a = 1:ncol
-        plot(k_estimates(:,a),z,'*','MarkerSize',4)
+        plot(k_estimates(:,a),z,k_sym{a},'MarkerSize',5)
     end 
     
     legend(k_names)
     
     xlabel('Hydraulic Conductivity (m/s)')
     set(gca, 'YDir','reverse')
-    ylim([min(depths),max(z)])
+    ylim([min(depths),max(depths)])
     
     set(gca,'FontSize',14)
 

@@ -7,8 +7,11 @@ maxT2B = 4;
 minT2B = 1.5; 
 maxlogb = inf; 
 minlogb = -inf; 
-maxn = 4; 
-minn = 0; 
+maxn = 4;
+minn = -4;
+
+%minn = 0; 
+
 maxm = 5; 
 minm = -2; 
 minsig = 1e-5; 

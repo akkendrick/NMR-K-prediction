@@ -5,19 +5,22 @@ close all
 site = 'Site1-WellG6below'
 
 %%
-n = [];
-m = [];
+n = 2;
+m = 0;
 figureson = 1;
+wDirect = 1;
 
-[K,z,T2dist,T2logbins,k_boot,k_mcmc,bestFitMatrix,totalErrorEstimate] = computeProfile(site,n,m,figureson);
+[K,z,T2dist,T2logbins,k_boot,k_mcmc,k_direct,bestFitMatrix,totalErrorEstimate] = computeProfile(site,n,m,figureson,wDirect);
 
-k_estimates = [k_boot k_mcmc];
-k_names = [{'DPP'} {'Bootstrap n=[] m=[]'} {'MCMC n=[] m=[]'}];
-k_sym = [{'+'} {'+'}];
+k_estimates = [k_boot k_direct k_mcmc];
+k_names = [{'DPP'} {'Bootstrap n=2 m=4'} {'Direct n=2 m=4'} {'MCMC n=2 m=4'}];
+k_sym = [{'+'} {'+'} {'+'}];
 
 plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
 methodNames = [{'Bootstrap'} {'Direct'} {'MCMC'}]
+
 bestFitMatrix
+totalErrorEstimate
 
 %%
 % n = 2;

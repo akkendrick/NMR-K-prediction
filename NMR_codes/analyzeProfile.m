@@ -1,13 +1,13 @@
 % Plot measured and estimated k with depth
-
+close all
 clear
 
-%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1'
+name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1'
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1'
-name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1'
+%name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1'
 %name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
 
-site = 'Site2-WellPN2';
+site = 'Site1-WellG5';
 
 baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
 in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
@@ -34,7 +34,7 @@ totalErrorEstimate = zeros(1,3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SET INVERSION PARAMETERS
 % Vista Clara Params
-n = 2;
+n = 1;
 m = 1;
 
 % Old Params
@@ -158,13 +158,13 @@ stepsize = 0.8;
 % b obtained. 
 
 %%%%%%%%%%%%%%%%%%% MCMC over all parameters (T2B, b, n, m, data error (sigma_mcmc)
-[paramhats, hps, likes, kpreds, accept_rat] = mcmc_nmr_full(K, T2ML, phi, ...
-    z, Niter, stepsize, figureson);
-T2B_mcmc  = paramhats(1,:);
-blog_mcmc = paramhats(2,:); 
-n_mcmc = paramhats(3,:);
-m_mcmc = paramhats(4,:);
-sig_mcmc = paramhats(5,:);
+% [paramhats, hps, likes, kpreds, accept_rat] = mcmc_nmr_full(K, T2ML, phi, ...
+%     z, Niter, stepsize, figureson);
+% T2B_mcmc  = paramhats(1,:);
+% blog_mcmc = paramhats(2,:); 
+% n_mcmc = paramhats(3,:);
+% m_mcmc = paramhats(4,:);
+% sig_mcmc = paramhats(5,:);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -175,22 +175,22 @@ sig_mcmc = paramhats(5,:);
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if figureson == 1
-    graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
-    all_lKpreds = zeros(length(T2ML), length(blog_mcmc)); 
-    for k = 1:length(blog_mcmc)
-        bbm = [blog_mcmc(k), sig_mcmc(k)]; 
-        [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, phi, T2ML, m, n); 
-    end
-    hold on
-    for k = 1:size(all_lKpreds,1)
-        dpk = all_lKpreds(k,:); 
-        [h,x] = hist(dpk, 40); 
-        t2m = repmat(log10(T2ML(k)), 1, length(x)); 
-        scatter(t2m, x, [], h); 
-    end
-    scatter(log10(T2ML), logK, 'ok', 'filled')
-end
+% if figureson == 1
+%     graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
+%     all_lKpreds = zeros(length(T2ML), length(blog_mcmc)); 
+%     for k = 1:length(blog_mcmc)
+%         bbm = [blog_mcmc(k), sig_mcmc(k)]; 
+%         [~,all_lKpreds(:,k)] = NMRfun2(bbm, K, phi, T2ML, m, n); 
+%     end
+%     hold on
+%     for k = 1:size(all_lKpreds,1)
+%         dpk = all_lKpreds(k,:); 
+%         [h,x] = hist(dpk, 40); 
+%         t2m = repmat(log10(T2ML(k)), 1, length(x)); 
+%         scatter(t2m, x, [], h); 
+%     end
+%     scatter(log10(T2ML), logK, 'ok', 'filled')
+% end
 
 %m_mcmc = 0;
 
@@ -220,7 +220,7 @@ b_mean = mean(b_mcmc);
 logb_median = median(b_mcmc);
 b_median = 10.^logb_median;
 
-k_mcmc = b_mean*(phi.^m).*(T2ML).^2;
+k_mcmc = b_mean*(phi.^m).*(T2ML).^n;
 
 bestFitMatrix(1,3) = b_median;
 bestFitMatrix(2,3) = m;
@@ -232,10 +232,10 @@ totalErrorEstimate(3) = computeError(K, k_mcmc);
 %% Make a matrix of all models so far
 k_estimates = [k_bootstrap k_direct k_mcmc];
 k_names = [{'DPP'} {'Bootstrap'} {'Direct'} {'MCMC'}];
-
+k_sym = [{'+'} {'+'} {'+'}]
 %T2dist = flip(T2dist);
 
-plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names)
+plotKwithDepth(K,phi,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
 
 methodNames = [{'Bootstrap'} {'Direct'} {'MCMC'}]
 bestFitMatrix

@@ -440,6 +440,10 @@ k_sym = [{'+'} {'+'} {'+'}]
 plotKwithDepth(vertcat(KMat{:}),NMRphi,vertcat(zMat{:}),T2dist,...
     T2logbins,k_estimates,k_names,k_sym)
 
+kDiffFactor = estimateKdiffFactor(vertcat(KMat{:}),k_estimates)
+display('kDiffFactor')
+meanDiffFactor = mean(kDiffFactor)
+
 methodNames = [{'Bootstrap'} {'Direct'} {'MCMC'}]
 bestFitMatrix
 totalErrorEstimate

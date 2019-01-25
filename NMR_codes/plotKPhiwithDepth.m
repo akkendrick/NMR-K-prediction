@@ -1,4 +1,4 @@
-function plotKPhiwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
+function plotKPhiwithDepth(K,NMRphi,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
 % Plot 
 
     
@@ -9,7 +9,7 @@ function plotKPhiwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
     depths = T2dist(:,1);
     T2dist = T2dist(:,2:end);
       
-    subplot(121)
+    subplot(131)
     %imagesc(T2dist)
     
     surf(T2logbins,depths,T2dist,'EdgeColor','none')
@@ -26,7 +26,7 @@ function plotKPhiwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
   %  set(gca, 'YDir','reverse')
   
     
-    subplot(122)
+    subplot(132)
     
     box on
     grid on
@@ -47,7 +47,24 @@ function plotKPhiwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
     
     set(gca,'FontSize',14)
 
-      
+    
+    
+    subplot(133)
+    
+    box on
+    grid on
+    
+    hold on
+    plot(NMRphi,depths,'LineWidth',3)
+    
+    
+    xlabel('NMR Porosity')
+    set(gca, 'YDir','reverse')
+    ylim([min(depths),max(depths)])
+    xlim([0,1])
+    
+    set(gca,'FontSize',14)
+    
     
 end
 

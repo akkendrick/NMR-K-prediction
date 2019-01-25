@@ -31,7 +31,7 @@ x_init = [2.5, -2, 2, 0, 1]';
 % ip = 2;       % T2B, no porosity, log space
 % ip = 3;      % no T2B or porosity, real space - not stabile
 % ip = 4;      % full SDR
-ip = 4;
+ip = 1;
 
 % run mcmc
 [paramhats, likes, kpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun, x_init, k, ...

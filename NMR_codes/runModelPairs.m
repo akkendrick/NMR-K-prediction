@@ -20,15 +20,29 @@ siteList = [{'Site1-WellG6'} {'Site1-WellG6above'} {'Site1-WellG6below'}...
 % m = [0 2 4 0 2 4];
 % n = [1 1 1 2 2 2];
 
-m = [0 1 4]
-n = [0 0 0]
+% m = [0 1 4]
+% n = [0 0 0]
 
+m = [];
+n = [];
 
 figureson = 0;
 wDirect = 1;
 currentRow = -3;
 
-for j = 1:length(m)
+if isempty(m) && isempty(n)
+    currentFitMatrix = [];
+    currentErrorMatrix = [];
+    for i = 1:length(siteList)
+        siteName = siteList{i}
+
+        [K,z,T2dist,T2logbins,k_boot,k_mcmc,k_direct,bestFitMatrix,totalErrorEstimate] = computeProfile(siteName,[],[],figureson,wDirect);
+
+        currentFitMatrix = [currentFitMatrix bestFitMatrix];
+        currentErrorMatrix = [currentErrorMatrix totalErrorEstimate];
+    end
+else
+    for j = 1:length(m)
         currentRow = currentRow + 4;
         currentFitMatrix = [];
         currentErrorMatrix = [];
@@ -41,11 +55,12 @@ for j = 1:length(m)
             currentFitMatrix = [currentFitMatrix bestFitMatrix];
             currentErrorMatrix = [currentErrorMatrix totalErrorEstimate];
         end
-        
+
         matrixKey(1,j) = n(j);
         matrixKey(2,j) = m(j);
         totalFitMatrix(currentRow:currentRow+2,:) = currentFitMatrix;
         totalErrorMatrix(currentRow,:) = currentErrorMatrix;
+    end
 end
         
             

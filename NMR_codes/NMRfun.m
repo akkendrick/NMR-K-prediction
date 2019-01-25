@@ -20,7 +20,7 @@ function [loglike, kpred, likelihood] = NMRfun(x, Dk, phi, T2, ip)
     
     % compute forward model for chosen model type
     if ip == 1
-        kpred = logb + m*lphi - n*log10((T2.^-1)-(T2B.^-1));    % with porosity
+        kpred = logb + m*lphi - n*log10((T2.^-1)-(T2B.^-1));    %Seevers Model with porosity
     elseif ip == 2
         kpred = logb - n*log10((T2.^-1)-(T2B.^-1));    % without porosity
     elseif ip == 0

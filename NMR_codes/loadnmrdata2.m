@@ -157,15 +157,15 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
         T2ML = [T2MLg; T2MLlar; T2MLleq]; 
         SumEch = [SumEchg; SumEchlar; SumEchleq];
         phi = [phig; philar; phileq];
-     %   SumEch_3s = [SumEch_3sg; SumEch_3slar; SumEch_3sleq];
-      %  SumEch_twm = [SumEch_twmg; SumEch_twmlar; SumEch_twmleq];
-      %  SumEch_twm_3s = [SumEch_twm_3sg; SumEch_twm_3slar; SumEch_twm_3sleq];
-        SumEch_3s = 0;
-        SumEch_twm = 0;
-        SumEch_twm_3s = 0;
+       SumEch_3s = [SumEch_3sg; SumEch_3slar; SumEch_3sleq];
+       SumEch_twm = [SumEch_twmg; SumEch_twmlar; SumEch_twmleq];
+       SumEch_twm_3s = [SumEch_twm_3sg; SumEch_twm_3slar; SumEch_twm_3sleq];
+%         SumEch_3s = 0;
+%         SumEch_twm = 0;
+%         SumEch_twm_3s = 0;
         
       
-        d = [z, T2ML, phi, K, SumEch]%, SumEch_3s, SumEch_twm, SumEch_twm_3s]; 
+        d = [z, T2ML, phi, K, SumEch];%, SumEch_3s, SumEch_twm, SumEch_twm_3s]; 
         
         log10T2 = log10(T2ML); 
         log10Porosity = log10(phi); 

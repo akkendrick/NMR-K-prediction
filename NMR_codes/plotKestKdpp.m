@@ -16,7 +16,7 @@ function plotKestKdpp(K,k_estimates,k_names,k_sym)
     legend(k_names)
     
     xlabel('DPP K (m/s)')
-    ylabel('SDR Estimated K (m/s)') 
+    ylabel('Estimated K (m/s)') 
     
     set(gca,'FontSize',14)
     

@@ -15,23 +15,23 @@ end
     minsig = 1e-5; 
     maxsig = inf; 
     
-   % maxT2B = 4;
-   % minT2B = 1.5;
+   maxT2B = 4;
+   minT2B = 1.5;
 
-    bounds = [minlogb, maxlogb; minsig, maxsig]; 
-   %bounds = [minlogb, maxlogb; minsig, maxsig; minT2B, maxT2B];
+   %bounds = [minlogb, maxlogb; minsig, maxsig]; 
+   bounds = [minlogb, maxlogb; minsig, maxsig; minT2B, maxT2B];
    
     k = 100; 
     bcut = 100; 
-    x_init = [-2, 1]'; 
-    %x_init = [-2,1,2.5]';
+    %x_init = [-2, 1]'; 
+    x_init = [-2,1,2.5]';
 
     % determine which equation to use: 
     % ip = 0        % no T2B or porosity, log space
     %  ip = 1        % T2B and porosity, log space
 
     % run mcmc
-    [xhats, likes, lkpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun2, x_init, k, ...
+    [xhats, likes, lkpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun2_T2B, x_init, k, ...
          bounds, [], [], bcut, [],Dk, phi, T2ML, m, n);
 
 %    [xhats, likes, lkpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun, x_init, k, ...
@@ -66,7 +66,7 @@ end
 
     %% Plotting
     if figureson == 1
-        names = {'log_{10}(b)', '\sigma'}; 
+        names = {'log_{10}(b)', '\sigma','T2B'}; 
         graph_correlations(xhats,1, names, 1, 0)
         
    %     plotKwithz2(kk, z, lkpreds)

@@ -13,7 +13,7 @@ min_rho = -6;
 max_tau = 10; 
 min_tau = 1; 
 
-nm = 1000;
+nm = 201;
 rhoSpace = logspace(min_rho, max_rho, nm); 
 tauSpace = linspace(min_tau, max_tau, nm); 
 

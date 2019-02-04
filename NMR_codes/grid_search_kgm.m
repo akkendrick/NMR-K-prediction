@@ -1,4 +1,4 @@
-function [tauspace, rhospace, r] = grid_search_kgm(lT2, lphi, kk)
+function [KGM_lk, besttau, bestrho, r] = grid_search_kgm2(lT2, lphi, kk)
 % this function does a grid search over specified parameter values in the
 % SDR equation
 
@@ -14,7 +14,6 @@ aa = 1.0413; bb = 0.039828; cc = 0.00040318;            % diffusivity constants
 D = @(T) aa + bb*T+ cc*T.^2;   % diffusivity (m^2/s)
 rho_h2o = @(T) 1000*(1 - (((T + 288.94)/(508929 ...
     *(T+68.12)))*((T - 3.98).^2)));             % density of water (kg/m^3)
-g = 9.81; %m/s^2
 
 % set bounds on A = g/(8*tau^2*rho^2), B = rho^2
 max_tau = 0; 
@@ -27,18 +26,24 @@ nm = 201;
 tauspace = linspace(min_tau, max_tau, nm); 
 rhospace = logspace(min_rho, max_rho, nm); 
 
+parameterMatrixTau = tauspace .* ones(nm,nm);
+parameterMatrixRho = rhospace' .* ones(nm,nm);
+
+parameterMatrixTau = (fliplr(parameterMatrixTau));
+parameterMatrixRho = (fliplr(parameterMatrixRho));
+
 % KGM equation
- lK_kgm = @(A,B, T, T2, lphi) log10(rho_h2o(T)*g) - log10(8*A^2*eta(T)) + lphi ...
-     + 2*log10( - (D(T)/B) + sqrt((D(T)/B)^2 + ((4*D(T)*Tb(T)*T2)./(Tb(T) - T2)))); 
-%lK_kgm = @(A, B, T, T2, phi) KGMfun([A, B], [T2]); 
+% lK_kgm = @(A,B, T, T2, lphi) (A) + lphi ...
+%     + 2*log10( - (D(T)/B) + sqrt((D(T)/B)^2 + ((4*D(T)*Tb(T)*T2)./(Tb(T) - T2)))); 
+lK_kgm = @(A, B, T, T2, phi) KGMfun([A, B], [T2]); 
 
 T = 20; 
 % run grid search
 [r] = deal(zeros(length(tauspace), length(rhospace)));  
 for mloop = 1:length(rhospace)
-    btest = rhospace(mloop);    
-    for bloop = 1:length(tauspace)    
-        atest = tauspace(bloop);  
+    for bloop = 1:length(tauspace)   
+        btest = parameterMatrixRho(mloop,bloop);
+        atest = parameterMatrixTau(mloop,bloop);  
         lKp = lK_kgm(atest, btest, T, T2, phi);
         r(mloop, bloop) = norm(lKp - kk); 
     end
@@ -65,21 +70,62 @@ bestp = min(r(:));
 
 indp = find(r(:) == bestp); 
 [ii, jj] = ind2sub(s, indp);
-bestA = tauspace(ii); 
-bestB = rhospace(jj); 
-lkpred = lK_kgm(bestA, bestB, T, T2, lphi); 
+% bestA = tauspace(ii); 
+% bestB = rhospace(jj); 
+
+bestA = parameterMatrixTau(ii,jj);
+bestB = parameterMatrixRho(ii,jj);
+
+
+lkpred = lK_kgm(bestA, bestB, T, T2, phi); 
 
 figure; scatter(kk, lkpred), axis equal, hold on, refline(1,0)
-xlabel('Observerd K')
+xlabel('Observed K')
 ylabel('Predicted K')
 
 taus = 1./sqrt(10.^(tauspace)); 
+tausParamMatrix = 1./sqrt(10.^parameterMatrixTau);
+rhosParamMatrix = log10(parameterMatrixRho);
+
+errorMatrix = log10(r/length(phi));
+display('ii')
+ii
+display('jj')
+jj
+
+% Make sure all variables are displayed in LINEAR SPACE
+display('tau (ii,jj)')
+besttau = tausParamMatrix(ii,jj)
+display('rho (ii,jj)')
+bestrho = bestB
+display('Parameter Error (ii,jj)')
+errorMatrix(ii,jj)
+
+KGM_lk = lkpred;
 % Plot grid results
 figure; 
 % subplot(4, 4, [1:3,5:7,9:11, 13:15])
 hold on
-imagesc(taus, log10(rhospace), log10(r/length(phi)))
-plot(taus(jj), log10(rhospace(ii)), '*w')
+%imagesc(fliplr(taus), fliplr(log10(rhospace)), errorMatrix)
+%imagesc([1 10],[0 -6.6],flipud(fliplr(errorMatrix)))
+%imagesc([1 10],[0 -6.6],errorMatrix)
+
+%uimagesc(fliplr(taus),fliplr(log10(rhospace)),errorMatrix)
+uimagesc(fliplr(taus),(log10(rhospace)),errorMatrix)
+
+
+% tausParamMatrix = fliplr(tausParamMatrix);
+% rhosParamMatrix = flipud(rhosParamMatrix);
+% errorMatrix = flipud(fliplr(errorMatrix));
+
+bestp = min(errorMatrix(:)); 
+
+indp = find(errorMatrix(:) == bestp); 
+[ii, jj] = ind2sub(s, indp);
+
+plot(tausParamMatrix(ii,jj), rhosParamMatrix(ii,jj), '*w')
+
+
 caxis([-1.2,0])
 % plot( bestb, [1, 2, 4, 0], 'sw')
 colorbar('Ticks', [-1.2:.2:0])

@@ -8,7 +8,7 @@ end
 
 % set bounds on rho and tau 
 max_rho = 0;
-min_rho = -6;
+min_rho = -6.6;
 
 max_tau = 10; 
 min_tau = 1; 
@@ -20,15 +20,15 @@ tauSpace = linspace(min_tau, max_tau, nm);
 % SDR equation
 %SDR_f = @(b, m, n, lT2, lphi) log10(b) + m*lphi + n*lT2; 
 
-temp = 20;
-T_B = 3.3 + 0.044*(temp - 35);
-eta = 1002*10^-6;
-D = (1.0413+0.039828*temp+0.00040318*temp^2)*10^-9;
-density = 1000*(1-(temp+288.94)/(508929*(temp+68.12))*(temp-3.98)^2);
-g = 9.81; %m/s^2
+temp = 20;  % temperature in degress C 
+density = @(Tt) 1000*(1 - ((Tt+288.94)./(508929*(Tt+68.12))).*(Tt-3.98).^2); % kg/m^3
+eta = @(Tt) 0.0013 - 1.7e-5*Tt;         % Pa -s
+T_B = @(Tt) 3.3 + 0.044*(Tt - 35);       % seconds
+D = @(Tt) (1.0413 + 0.039828*Tt + 0.00040318*Tt.^2).*1e-9;  % m^2/s 
+g = 9.8;    %m/s^2
 
-KGM_f = @(rho, tau) density.*g/(8*tau^2*eta).*phi.*(-D/rho+sqrt((D/rho)^2+...
-    4*D*(T2.^(-1)-T_B^(-1)).^(-1)) ).^2;
+KGM_f = @(rho, tau) density(temp).*g/(8*tau^2*eta(temp)).*phi.*(-D(temp)/rho+sqrt((D(temp)/rho)^2+...
+    4*D(temp)*(T2.^(-1)-T_B(temp)^(-1)).^(-1)) ).^2;
 
 % run grid search
 [r] = deal(zeros(length(tauSpace), length(rhoSpace)));  

@@ -1,4 +1,4 @@
-function plotKPhiwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
+function plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names,k_sym)
 % Plot 
 
     

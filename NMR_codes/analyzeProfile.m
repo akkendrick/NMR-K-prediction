@@ -59,7 +59,7 @@ m = 1;
 % % single matrix
 % % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
 % % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
-% %  [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+% % [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
 %   
 % %  [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);    % n and m can vary
 %    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
@@ -234,7 +234,7 @@ bestFitMatrix(3,3) = n_median;
 
 totalErrorEstimate(3) = computeError(K, k_mcmc);
 
-plotKwithDepth(K,NMRphi,z,T2dist,T2logbins,k_mcmc,[{'DPP'} {'MCMC'}], {'+'})
+plotKwithDepth(K,z,T2dist,T2logbins,k_mcmc,[{'DPP'} {'MCMC'}], {'+'})
 
 
 % %% Make a matrix of all models so far

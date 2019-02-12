@@ -228,7 +228,7 @@ for k = 1:length(all_names)
     T2ML = SumEch; 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    n = 1;
+    n = 2;
     %[b_boot, n_boot] = bootstrap_fun_mb([lt, kk], Nboot);    % n can vary
     [b_boot, n_boot] = bootstrap_fun([lt, kk], Nboot, n);    % fix n
     meanb(k) = mean(b_boot); 

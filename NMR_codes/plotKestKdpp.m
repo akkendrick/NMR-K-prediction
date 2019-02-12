@@ -19,8 +19,6 @@ function plotKestKdpp(K,k_estimates,k_names,k_sym)
     ylabel('Estimated K (m/s)') 
     
     set(gca,'FontSize',14)
-    
-
 
 end
 

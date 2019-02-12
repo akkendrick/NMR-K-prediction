@@ -49,75 +49,73 @@ totalErrorEstimate = zeros(1,3);
 k_bootstrap = [];
 k_mcmc = [];
 k_direct = [];
-
-
 %% Bootstrap
 
-% Nboot =  2000; % number of bootstrap samples
-% 
-% % Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
-% % single matrix
-% % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
-% % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
-% %  [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
-%   
-% %  [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);    % n and m can vary
-% 
-% if isempty(n) && isempty(m)
-%     [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);
-% else   
-%     [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
-% end
-% 
-% if figureson ==1 
-%     bs = log10(b_boot); 
-%     graph_correlations([bs, n_boot], 2, {'log_{10}(b)', 'n'}, 1, 0)
-% else
-%     bs = log10(b_boot); 
-% end
-% 
-% 
-% meanb = mean(b_boot);
-% sortb = sort(b_boot); 
-% blo = sortb(50);
-% bhi = sortb(1950);
-% 
-% median_b = median(b_boot);
-% 
-% % BIG Q: Use mean or median? Maybe should be using median here... 
-% 
-% % Now compute k values as a function of depth
-% if isempty(m_boot) && isempty(n_boot)
-%     k_bootstrap = median_b*(phi.^m).*(T2ML).^n;
-%     
-%     bestFitMatrix(1,1) = median_b;
-%     bestFitMatrix(2,1) = m;
-%     bestFitMatrix(3,1) = n;
-%     
-%     totalErrorEstimate(1) = computeError(K, k_bootstrap);
-% else
-%     if isempty(m_boot)
-%         median_n = median(n_boot);
-%         k_bootstrap = median_b*(phi.^m).*(T2ML).^median_n;
-%        
-%         bestFitMatrix(1,1) = median_b;
-%         bestFitMatrix(2,1) = m;
-%         bestFitMatrix(3,1) = median_n;
-%         
-%         totalErrorEstimate(1) = computeError(K, k_bootstrap);
-% 
-%     else
-%         median_m = median(m_boot);
-%         median_n = median(n_boot);
-%         k_bootstrap = median_b*(phi.^median_m).*(T2ML).^median_n;
-%         
-%         bestFitMatrix(1,1) = median_b;
-%         bestFitMatrix(2,1) = median_m;
-%         bestFitMatrix(3,1) = median_n;
-%         
-%         totalErrorEstimate(1) = computeError(K, k_bootstrap);
-%     end
-% end
+Nboot =  2000; % number of bootstrap samples
+
+% Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
+% single matrix
+% [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
+% [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
+%  [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+  
+%  [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);    % n and m can vary
+
+if isempty(n) && isempty(m)
+    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);
+else   
+    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
+end
+
+if figureson ==1 
+    bs = log10(b_boot); 
+    graph_correlations([bs, n_boot], 2, {'log_{10}(b)', 'n'}, 1, 0)
+else
+    bs = log10(b_boot); 
+end
+
+
+meanb = mean(b_boot);
+sortb = sort(b_boot); 
+blo = sortb(50);
+bhi = sortb(1950);
+
+median_b = median(b_boot);
+
+% BIG Q: Use mean or median? Maybe should be using median here... 
+
+% Now compute k values as a function of depth
+if isempty(m_boot) && isempty(n_boot)
+    k_bootstrap = median_b*(phi.^m).*(T2ML).^n;
+    
+    bestFitMatrix(1,1) = median_b;
+    bestFitMatrix(2,1) = m;
+    bestFitMatrix(3,1) = n;
+    
+    totalErrorEstimate(1) = computeError(K, k_bootstrap);
+else
+    if isempty(m_boot)
+        median_n = median(n_boot);
+        k_bootstrap = median_b*(phi.^m).*(T2ML).^median_n;
+       
+        bestFitMatrix(1,1) = median_b;
+        bestFitMatrix(2,1) = m;
+        bestFitMatrix(3,1) = median_n;
+        
+        totalErrorEstimate(1) = computeError(K, k_bootstrap);
+
+    else
+        median_m = median(m_boot);
+        median_n = median(n_boot);
+        k_bootstrap = median_b*(phi.^median_m).*(T2ML).^median_n;
+        
+        bestFitMatrix(1,1) = median_b;
+        bestFitMatrix(2,1) = median_m;
+        bestFitMatrix(3,1) = median_n;
+        
+        totalErrorEstimate(1) = computeError(K, k_bootstrap);
+    end
+end
 %% Basic solving for b for fixed n, m
     % Given m and n, we can solve directly for b -> b = log(k) - m*log(phi) -
     % n*log(T2ML). This is the 'direct' method.

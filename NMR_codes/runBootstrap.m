@@ -27,7 +27,7 @@ for k = 1:length(all_names)
     % m assumed 0; 
     n = 2; 
     m = 4; 
-    Nboot =  2000; % number of bootstrap samples
+    Nboot =  100; % number of bootstrap samples
 
     % Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
     % single matrix

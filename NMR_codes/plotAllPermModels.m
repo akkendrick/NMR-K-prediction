@@ -22,7 +22,7 @@ cutoff = 33*10^-3;
 
  Seevers_m = [1,0,1,0,1,1];
  Seevers_n = [1,1,1,1,1,1];
- Seevers_b = [0.0011,0.0026,0.0011,0.0026,0.0031,0.0031];
+ Seevers_b = [0.0010,0.0065,0.0010,0.0065,0.0034,0.0034];
  
  KGM_tau = [2.1135,2.1135,1,1.9724,2.6915,3.1989];
  KGM_rho = [6.95E-05,1,1.91E-05,1,1,1];
@@ -107,7 +107,7 @@ for kk = 1:length(sites)
     T2B_depth = sonicCoreT2BData.Depthm;
     T2B_depth = flipud(T2B_depth);  
     
-    T2B_peak = sonicCoreT2BData.T2Bpeak;
+    T2B_peak = sonicCoreT2BData.T2Bpeak*(10^-3);
     T2B_peak = flipud(T2B_peak); 
     
     decaycurve = load(in1); 

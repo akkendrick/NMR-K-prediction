@@ -10,6 +10,9 @@ siteList = [{'Site1-WellG6'} {'Site1-WellG6above'} {'Site1-WellG6below'}...
 m = [0 1 2 0 1 2];
 n = [1 1 1 2 2 2];
 
+% m = [1]
+% n = [1]
+
 figureson = 1;
 wDirect = 0;
 currentRow = -3;

@@ -1,13 +1,18 @@
-function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,totalErrorEstimate] = computeSeevers(site,n,m,figureson,wDirect)
-% Compute Seevers Models
+% Plot data for Seevers analysis
+
 baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
 
 load('sonicCoreT2B.mat','sonicCoreT2BData')
 T2B_depth = sonicCoreT2BData.Depthm;
 T2B_depth = flipud(T2B_depth);
 
-T2B_peak = sonicCoreT2BData.T2Bpeak;
+T2B_peak = sonicCoreT2BData.T2Bpeak*10^-3; % Put in s 
 T2B_peak = flipud(T2B_peak); 
+
+site = 'Site1-WellG6above';
+n = 1;
+m = 1;
+figureson = 1;
 
 if strcmp(site,'Site1-WellG5')
     name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
@@ -62,7 +67,7 @@ k_direct = [];
 
 % Now compute depths closest to T2B samples
 nmrDepths = d(1:end,1);
-interpT2B = interp1(T2B_depth, T2B_peak, nmrDepths)*10^-3; %Convert from ms to s
+interpT2B = interp1(T2B_depth, T2B_peak, nmrDepths);
 
 %% Plot T2B data for reference
 % figure
@@ -166,7 +171,47 @@ bestFitMatrix(3,3) = n_median;
 
 totalErrorEstimate(3) = computeError(K, k_mcmc);
 
+%% Plot data
+close all
+
+figure
+hold on
+plot(T2B_peak,T2B_depth,'*')
+plot(interpT2B,z,'+')
+set(gca,'YDir','reverse')
+legend('T2B','Interp T2B')
+grid on
+box on
 
 
+figure
+hold on
+plot(T2ML,z,'*')
+plot(interpT2B/3,z,'+')
+set(gca,'YDir','reverse')
+legend('T2ML','1/3 T2B')
+grid on
+box on
 
-end
+T2Seevers = ((T2ML.^(-1) - interpT2B.^(-1)).^(-1));
+
+% Try Fixing T2B
+T2Bfix = 500*10^-3;
+T2FixedSeevers = ((T2ML.^(-1) - T2Bfix^(-1)).^(-1));
+
+% Try crude optimal T2B
+T2Bopt = ones(length(interpT2B),1)*2.2;
+T2Bopt(K > 2*10^-4) = 0.520;
+T2OptSeevers = ((T2ML.^(-1) - T2Bopt.^(-1)).^(-1));
+
+figure 
+hold on
+plot(K,T2ML,'*')
+%plot(K,T2Seevers,'+')
+%plot(K,T2FixedSeevers,'o')
+plot(K,T2OptSeevers,'^')
+grid 
+legend('T2ML','T2Seevers','T2B Fixed')
+box on
+
+

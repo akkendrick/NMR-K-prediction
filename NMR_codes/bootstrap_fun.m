@@ -4,7 +4,7 @@ function [bs, ns, ms, logb] = bootstrap_fun (data, Nboot, n, m)
 if nargin == 4
     bhat = bootstrp(Nboot, @(x) bootstrap_nmr_called_2(x, n, m), data);    % n,m can vary
 elseif nargin == 3
-    bhat = bootstrp(Nboot, @(x) bootstrap_nmr_called(x, n), data);    % m can vary
+    bhat = bootstrp(Nboot, @(x) bootstrap_nmr_called_2(x, n), data);    % m can vary
 elseif nargin == 2
     bhat = bootstrp(Nboot, @(x) bootstrap_nmr_called_2(x), data); % m = 0, n = 2
 else

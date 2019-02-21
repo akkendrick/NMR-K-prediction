@@ -11,10 +11,13 @@ close all
  SDR_m = [1,0,1,0,1,1];
  SDR_b = [0.008,2.75E-04,0.008,2.75E-04,3.8E-03,3.8E-03]; 
  
-cutoff = 33*10^-3;
+ %cutoff = 33*10^-3;
+
+ cutoffs = [174,800,324,246,244,266]*10^-3;
  TC_n = [1,1,1,1,1,1];
  TC_m = [2,2,2,2,2,2];
- TC_c = [6.93E-08,3.19E-10,6.93E-08,3.19E-10,0.0122,0.0122];
+ %TC_c = [6.93E-08,3.19E-10,6.93E-08,3.19E-10,0.0122,0.0122];
+ TC_c = [0.0036,0.1274,0.0078,0.0104,0.0229,0.0161];
  
 %  Seevers_m = [1,1,1,1,1,1];
 %  Seevers_n = [2,0,2,0,1,1];
@@ -57,6 +60,8 @@ f12 = @(rho) (D(Temp)./rho);
 SQterm = @(rho,T2) sqrt(f12(rho).^2 + (num2(T2)./denom2(T2))); 
 
 KGM_lK = @(rho,tau,m,lphi,T2) log10(1/tau^2) + log10(t1) + m*lphi + 2*log10(SQterm(rho,T2)-f12(rho)); 
+
+errorEstimates = zeros(length(sites),5);
 
 for kk = 1:length(sites)
     baseName = sites{kk}
@@ -202,7 +207,7 @@ for kk = 1:length(sites)
     % Specify cutoff between FFI and BVI in ms
     %cutoff = 33*10^-3;
 
-    [val, cutoffBin] = min(abs(T2linbins - cutoff));
+    [val, cutoffBin] = min(abs(T2linbins - cutoffs(kk)));
     zStep = 20;
 
     boundT2dist(1:cutoffBin) = T2dist(zStep,1:cutoffBin);
@@ -216,7 +221,7 @@ for kk = 1:length(sites)
     box on
     grid on
     plot(T2linbins, T2dist(zStep,:))
-    plot([cutoff,cutoff], [0,0.02],'LineWidth',2)
+    plot([cutoffs(kk),cutoffs(kk)], [0,0.02],'LineWidth',2)
     set(gca, 'xscale','log')
     xlabel('T_2 (s)')
     ylabel('Relative Amplitude')
@@ -257,11 +262,19 @@ for kk = 1:length(sites)
     
     KGM_lKest = KGM_lK(KGM_rho(kk),KGM_tau(kk),KGM_m(kk),log10(phi),T2ML);
     KGM_Kest = 10.^KGM_lKest;
-       
+           
+    SDR_error = computeError(Dk, SDR_Kest);
+    TC_error = computeError(Dk, TC_Kest);
+    SOE_error = computeError(Dk, SOE_Kest);
+    Seevers_error = computeError(Dk, Seevers_Kest);
+    KGM_error = computeError(Dk, KGM_Kest);
     
     k_estimates = [SDR_Kest TC_Kest SOE_Kest Seevers_Kest KGM_Kest];
     k_names = {'DPP','SDR','TC 33ms','SOE','Seevers','KGM'};
     k_sym = {'+','o','*','x','^','v'};
+    k_error = [SDR_error TC_error SOE_error Seevers_error KGM_error];
+    
+    errorEstimates(kk, :) = k_error;
     
     plotKestKdpp(K,k_estimates,k_names,k_sym)
     title(baseName)

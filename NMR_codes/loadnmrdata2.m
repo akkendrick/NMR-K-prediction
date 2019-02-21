@@ -3,7 +3,9 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
     % variables. 
     
     if strcmp(name, 'A1') ==0 && strcmp(name, 'C1') == 0 && strcmp(name, 'gems_all') ==0 && strcmp(name, 'all_data') == 0
-        baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/NMR-K-prediction/';
+%        baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/NMR-K-prediction/';
+        baseDir = 'I:\My Drive\USGS Project\NMR-K-prediction\';
+
         in=([baseDir filesep 'Data' filesep 'Aggregated_data' filesep name '.txt']);               %define the datafile name
         d=load(in);                         %load the raw data
         K= d(:,4);                          %convert direct data to K in [m filesep s] 

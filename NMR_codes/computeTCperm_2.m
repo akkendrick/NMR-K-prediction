@@ -1,8 +1,9 @@
-function [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,totalError,indexQuotient] = computeTCperm(baseName,n,m,cutoff,figureson)
+function [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,totalError] = computeTCperm_2(baseName,n,m,cutoff,figureson)
 
 %baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
-baseDir = 'I:\My Drive\USGS Project\USGS Data\';
+%baseDir = 'I:\My Drive\USGS Project\USGS Data\';
 %baseDir = 'I:\My Drive\USGS Project\Kansas_Wash_Data\';
+baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/Kansas_Wash_Data/';
 
 if strcmp(baseName,'Site1-WellG5')
     site = 'Site1-WellG5';
@@ -37,15 +38,15 @@ elseif strcmp(baseName,'Site2-WellPN2')
     name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1';
     nmrName = name;
 else 
-    
+    site = baseName;
 end
 
-in3 = [baseDir site '/' name '/' strcat(site,'_DPP_filt.txt')];
-in5 = [baseDir site '/' name '/' name '_T2_dist.txt'];
-in6 = [baseDir site '/' name '/' name '_T2_bins_log10s.txt'];
+%in3 = [baseDir site '/' name '/' strcat(site,'_DPP_filt.txt')];
+in5 = [baseDir site '/' site '_T2_dist.txt'];
+in6 = [baseDir site '/' site '_T2_bins_log10s.txt'];
 
 
-DPPdat = load(in3); 
+%DPPdat = load(in3); 
 T2dist = load(in5);
 T2logbins = load(in6);
 % set needed variables
@@ -54,10 +55,10 @@ T2logbins = load(in6);
 %z_dk = olddat(:,1); 
 
 [d, K, T2ML, phi, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
-SumEch_twm_3s] = loadnmrdata2(nmrName); 
+SumEch_twm_3s] = loadnmrdata2(site); 
 
-Dk = DPPdat(:,2)*1.16e-5; % converts K from m/day to m/s
-z_dk = DPPdat(:,1);
+Dk = K;
+z_dk = z;
 
 origT2dist = T2dist;
 
@@ -202,9 +203,7 @@ Nboot = 300;
 if isempty(n) && isempty(m)
     % m, n can vary
     [c_boot, n_boot, m_boot] = bootstrap_fun([indexQuotient, logPhi, logK], Nboot);
-elseif ~isempty(n) && isempty(m)
-    [c_boot, n_boot, m_boot] = bootstrap_fun([indexQuotient, logPhi, logK], Nboot, n);       
-else        
+else
     % n and m fixed
     [c_boot, n_boot, m_boot] = bootstrap_fun([indexQuotient, logPhi, logK], Nboot, n, m);
 end
@@ -215,17 +214,14 @@ end
 %graph_correlations([cs, n_boot], 3, {'log_{10}(c)', 'n'}, 1, 0)
 
 median_c = median(c_boot);
-% median_n = median(n_boot);
-% median_m = median(m_boot);
-
-median_n = n;
-median_m = m;
+median_n = median(n_boot);
+median_m = median(m_boot);
 
 bestFitMatrix(1,1) = median_c;
 bestFitMatrix(2,1) = median_n;
 bestFitMatrix(3,1) = median_m;
 
-lkTC_best = lkTC(median_c,median_m,n,logPhi,indexQuotient);
+lkTC_best = lkTC(median_c,median_m,median_n,logPhi,indexQuotient);
 kTC_best = 10.^lkTC_best;
 
 %lkTC_Dlubac = kTC(1.6*10^-5,2,2,logPhi,indexQuotient);

@@ -8,7 +8,7 @@ minT2B = 1.5;
 maxlogb = inf; 
 minlogb = -inf; 
 maxn = 4;
-minn = -4;
+minn = 0;
 
 %minn = 0; 
 
@@ -30,8 +30,8 @@ x_init = [2.5, -2, 2, 0, 1]';
 % ip = 1;        % T2B and porosity, log space
 % ip = 2;       % T2B, no porosity, log space
 % ip = 3;      % no T2B or porosity, real space - not stabile
-% ip = 4;      % full SDR
-ip = 1;
+ ip = 4;      % full SDR
+%ip = 1;
 
 % run mcmc
 [paramhats, likes, kpreds, accept_rat] = mcmc(Niter, stepsize, @NMRfun, x_init, k, ...

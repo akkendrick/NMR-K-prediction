@@ -1,42 +1,61 @@
-function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,totalErrorEstimate] = computeProfile(site,n,m,figureson,wDirect)
+function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,totalErrorEstimate] = computeProfile(site,n,m,figureson,wDirect,saveData)
 
-baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+%baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+baseDir = 'I:\My Drive\USGS Project\USGS Data\';
 
 if strcmp(site,'Site1-WellG5')
     name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
     nmrName = name;
+    saveName = 'G5';
+   
 elseif  strcmp(site,'Site1-WellG5above')
     site = 'Site1-WellG5';
     name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
     nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
+    
 elseif  strcmp(site,'Site1-WellG5below')
     site = 'Site1-WellG5';
     name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
     nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
+   
 elseif strcmp(site,'Site1-WellG6')
     name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
     nmrName = name;
+    saveName = 'G6';
+    
 elseif strcmp(site,'Site1-WellG6above')
     site = 'Site1-WellG6';
     name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above'
+    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
+    
 elseif strcmp(site,'Site1-WellG6below')
     site = 'Site1-WellG6';
     name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below'
+    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below';
+    
 elseif strcmp(site,'Site2-WellPN1')
     name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
     nmrName = name;
+    saveName = 'PN1';
+    
 elseif strcmp(site,'Site2-WellPN2')
     name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1';
     nmrName = name;
+    saveName = 'PN2';
+    
+else
+    name = site;
+    nmrName = site;
+    saveName = 'wisc_all';
 end
 
-in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
+%if figureson == 1
+    in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
+    in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
 
-T2dist = load(in1); 
-T2logbins = load(in2);
+    T2dist = load(in1); 
+    T2logbins = load(in2);
+%end
 
 [d, K, T2ML, phi, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
 SumEch_twm_3s] = loadnmrdata2(nmrName); 
@@ -63,7 +82,9 @@ Nboot =  2000; % number of bootstrap samples
 
 if isempty(n) && isempty(m)
     [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);
-else   
+elseif ~isempty(n) && isempty(m)
+    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], n, Nboot);
+else
     [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
 end
 
@@ -94,7 +115,7 @@ if isempty(m_boot) && isempty(n_boot)
     
     totalErrorEstimate(1) = computeError(K, k_bootstrap);
 else
-    if isempty(m_boot)
+    if isempty(n_boot) && ~isempty(m_boot)
         median_n = median(n_boot);
         k_bootstrap = median_b*(phi.^m).*(T2ML).^median_n;
        
@@ -116,29 +137,42 @@ else
         totalErrorEstimate(1) = computeError(K, k_bootstrap);
     end
 end
+
+if saveData ==1 
+    save(strcat(saveName,'_bootstrap_n_m_var.mat'),'bs','n_boot','m_boot')
+end
 %% Basic solving for b for fixed n, m
     % Given m and n, we can solve directly for b -> b = log(k) - m*log(phi) -
     % n*log(T2ML). This is the 'direct' method.
 
-% if wDirect == 1
-%     C = @(m, n, lt, lp) m*lp + n*lt; 
-% 
-%     bdir_n2 = logK - C(m, n, logT2ML, logPhi); 
-% 
-%     logb_mean = mean(bdir_n2);
-%     b_mean = 10.^logb_mean;
-% 
-%     logb_median = median(bdir_n2);
-%     median_b = 10.^logb_median;
-% 
-%     k_direct = b_mean*(phi.^m).*(T2ML).^2;
-% 
-%     bestFitMatrix(1,2) = median_b;
-%     bestFitMatrix(2,2) = m;
-%     bestFitMatrix(3,2) = n;
-% 
-%     totalErrorEstimate(2) = computeError(K, k_direct);
-% end
+if wDirect == 1
+    mDirect = bestFitMatrix(2,1);
+    nDirect = bestFitMatrix(3,1);
+    
+    C = @(m, n, lt, lp) m*lp + n*lt; 
+
+    bdir_n2 = logK - C(mDirect, nDirect, logT2ML, logPhi); 
+
+    logb_mean = mean(bdir_n2);
+    b_mean = 10.^logb_mean;
+    bs_basic = 10.^(bdir_n2);
+
+
+    logb_median = median(bdir_n2);
+    median_b = 10.^logb_median;
+
+    k_direct = b_mean*(phi.^mDirect).*(T2ML).^nDirect;
+
+    bestFitMatrix(1,2) = median_b;
+    bestFitMatrix(2,2) = mDirect;
+    bestFitMatrix(3,2) = nDirect;
+
+    totalErrorEstimate(2) = computeError(K, k_direct);
+end
+
+if saveData == 1
+    save(strcat(saveName,'_basic_solving_n_m_var.mat'),'bs_basic','nDirect','mDirect')
+end
 
 %% MCMC for solution to various parameters
 % Markov Chain Monte Carlo using Metropolis-Hastings algorithm. Assumes
@@ -155,7 +189,7 @@ stepsize = 0.8;
 % while this allows both to vary. This will inevitably affect the range in
 % b obtained. 
 
-if isempty(m) && isempty(n)
+if isempty(m) || isempty(n)
 
     %%%%%%%%%%%%%%%%%%% MCMC over all parameters (T2B, b, n, m, data error (sigma_mcmc)
     [paramhats, hps, likes, kpreds, accept_rat] = mcmc_nmr_full(K, T2ML, phi, ...
@@ -227,6 +261,10 @@ else
    
     
     
+end
+
+if saveData == 1
+    save(strcat(saveName,'_MCMC_n_m_var.mat'),'blog_mcmc','n_mcmc','m_mcmc')
 end
 
 % 

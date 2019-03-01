@@ -1,4 +1,4 @@
-function [z, T2ML, phi, Dk, soe, soe_3s, soe_twm, soe_twm_3s,k_SDR_VC, t, S, CapH20, FreeH20, k_TC] = build_nmr_txt_file(name)
+function [z, T2ML, phi, Dk, soe, soe_3s, soe_twm, soe_twm_3s,k_SDR_VC, t, S, CapH20, FreeH20, k_TC] = build_nmr_txt_file(site,name,offset)
 % convert raw data files to text files in format to be used by
 % NMR_script_main
 
@@ -7,13 +7,9 @@ function [z, T2ML, phi, Dk, soe, soe_3s, soe_twm, soe_twm_3s,k_SDR_VC, t, S, Cap
 % in2 = [pwd '\bstrp_dat_VC_raw\' name '\' name '.txt'];
 % in3 = [pwd '\bstrp_dat_original\' name '.txt'];
 
-%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-%name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
-name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+
 
 baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
-site = 'Site2-WellPN2';
 
 in1 = [baseDir site '/' name '/' name '_SE_decay' '.txt']; 
 in2 = [baseDir site '/' name '/' name '_1Dvectors.txt'];
@@ -26,7 +22,7 @@ DPPdat = load(in3);
 t = load(in4);
 
 % set needed variables
-z = dparam(:,1); 
+z = dparam(:,1) - offset; 
 
 % t = decaycurve(1,:); 
 % S = decaycurve(2:end, :); 

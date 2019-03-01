@@ -112,7 +112,8 @@ hold on
 
 %uimagesc(fliplr(taus),fliplr(log10(rhospace)),errorMatrix)
 uimagesc(fliplr(taus),(log10(rhospace)),errorMatrix)
-
+box on
+grid on
 
 % tausParamMatrix = fliplr(tausParamMatrix);
 % rhosParamMatrix = flipud(rhosParamMatrix);
@@ -135,6 +136,7 @@ xlim([min((taus)), max((taus))])
 ylim([min(log10(rhospace)), max(log10(rhospace))])
 ylabel('log_{10} (\rho)')
 xlabel('\tau')
+set(gca,'FontSize',14)
 % str = ['(a)  Misfit - best value pair: m = ', num2str(Bspace(ii)) ', log(b) = ',num2str(log10(Aspace(jj)))];
 % title(str)
 

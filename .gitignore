@@ -1,3 +1,7 @@
 bstrp_dat_VC_raw
 bstrp_dat_original
 *~
+*.txt
+*.mat
+*.png
+*.fig

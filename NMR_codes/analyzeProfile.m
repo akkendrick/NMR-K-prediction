@@ -2,23 +2,31 @@
 close all
 clear
 
-%name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1'
-name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1'
+name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1'
+%name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1'
 %name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1'
 %name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1'
+%name = 'wisc_all';
 
-site = 'Site1-WellG6';
+saveName = 'wisc_all';
 
-baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
-in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-in3 = [baseDir site '/' name '/' name '_1Dvectors' '.txt'];
+site = 'Site1-WellG5';
+%baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+baseDir = 'I:\My Drive\USGS Project\USGS Data\';
 
-T2dist = load(in1); 
-T2logbins = load(in2);
-dparam = dlmread(in3,'\t',1,0); 
+plotProfile = 0;
 
-NMRphi(:,1) = dparam(:,2);
+if plotProfile == 1
+    in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
+    in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
+    in3 = [baseDir site '/' name '/' name '_1Dvectors' '.txt'];
+
+    T2dist = load(in1); 
+    T2logbins = load(in2);
+    dparam = dlmread(in3,'\t',1,0); 
+
+    NMRphi(:,1) = dparam(:,2);
+end
 
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above'
 %name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below'
@@ -38,8 +46,8 @@ totalErrorEstimate = zeros(1,3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SET INVERSION PARAMETERS
 % Vista Clara Params
-n = 1;
-m = 1;
+n = [];
+m = [];
 
 % Old Params
 %n = 2; 
@@ -48,103 +56,111 @@ m = 1;
 
 % Estimate SDR parameters from bootstrap
 %% Bootstrap
-% % Randomly sample data with replacement, solve the subset for the
-% % best-fitting parameter values, and repeat many times. 
-% 
-% % m assumed 0; 
-% 
-% Nboot =  2000; % number of bootstrap samples
-% 
-% % Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
-% % single matrix
-% % [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
-% % [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
-% % [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
-%   
-% %  [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);    % n and m can vary
-%    [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
-% 
-% bs = log10(b_boot); 
-% graph_correlations([bs, n_boot], 2, {'log_{10}(b)', 'n'}, 1, 0)
-% %graph_correlations([bs, m_boot], 2, {'log_{10}(b)', 'm'}, 1, 0)
-% 
-% 
-% meanb = mean(b_boot);
-% sortb = sort(b_boot); 
-% blo = sortb(50);
-% bhi = sortb(1950);
-% 
-% median_b = median(b_boot);
-% 
-% % BIG Q: Use mean or median? Maybe should be using median here... 
-% 
-% % Now compute k values as a function of depth
-% if isempty(m_boot) && isempty(n_boot)
-%     k_bootstrap = median_b*(phi.^m).*(T2ML).^n;
-%     
-%     bestFitMatrix(1,1) = median_b;
-%     bestFitMatrix(2,1) = m;
-%     bestFitMatrix(3,1) = n;
-%     
-%     totalErrorEstimate(1) = computeError(K, k_bootstrap);
-% else
-%     if isempty(m_boot)
-%         median_n = median(n_boot);
-%         k_bootstrap = median_b*(phi.^m).*(T2ML).^median_n;
-%        
-%         bestFitMatrix(1,1) = median_b;
-%         bestFitMatrix(2,1) = m;
-%         bestFitMatrix(3,1) = median_n;
-%         
-%         totalErrorEstimate(1) = computeError(K, k_bootstrap);
-% 
-%     else
-%         median_m = median(m_boot);
-%         median_n = median(n_boot);
-%         k_bootstrap = median_b*(phi.^median_m).*(T2ML).^median_n;
-%         
-%         bestFitMatrix(1,1) = median_b;
-%         bestFitMatrix(2,1) = median_m;
-%         bestFitMatrix(3,1) = median_n;
-%         
-%         totalErrorEstimate(1) = computeError(K, k_bootstrap);
-%     end
-% end
-% 
-% %plotKwithz2(K, z, k_bootstrap)
-% %plotKwithDepth(K,z,k_bootstrap)
-% 
-% % k_estimates = [k_bootstrap];
-% % k_names = [{'DPP'} {'Bootstrap'}];
-% % 
-% % %T2dist = flip(T2dist);
-% % 
-% % plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names)]
-% 
-% %% Basic solving for b for fixed n, m
-%     % Given m and n, we can solve directly for b -> b = log(k) - m*log(phi) -
-%     % n*log(T2ML). This is the 'direct' method.
-% 
-% C = @(m, n, lt, lp) m*lp + n*lt; 
-% 
-% bdir_n1 = logK - C(m, n, logT2ML, logPhi); 
-% 
-% bdir_n2 = logK - C(m, n, logT2ML, logPhi); 
-% 
-% logb_mean = mean(bdir_n2);
-% b_mean = 10.^logb_mean;
-% 
-% logb_median = median(bdir_n2);
-% median_b = 10.^logb_median;
-% 
-% k_direct = b_mean*(phi.^m).*(T2ML).^2;
-% 
-% bestFitMatrix(1,2) = median_b;
-% bestFitMatrix(2,2) = m;
-% bestFitMatrix(3,2) = n;
-% 
-% totalErrorEstimate(2) = computeError(K, k_direct);
+% Randomly sample data with replacement, solve the subset for the
+% best-fitting parameter values, and repeat many times. 
 
+% m assumed 0; 
+
+Nboot =  2000; % number of bootstrap samples
+
+% Takes [log10(T2ML), log10(K)] or [log10(T2ML), log10(phi), log10(K)] as a
+% single matrix
+% [b_boot, n_boot, m_boot] = bootstrap_fun([lt,lp, kk], Nboot);         % m, n can vary
+% [b_boot, n_boot, m_boot] = bootstrap_fun([lt, lp, kk], Nboot, n);        % m can vary
+% [b_boot, n_boot, m_boot] = bootstrap_fun_mb([logT2ML, logK], Nboot);    % n can vary
+  
+  [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot);    % n and m can vary
+%   [b_boot, n_boot, m_boot] = bootstrap_fun([logT2ML, logPhi, logK], Nboot, n, m);   % m, n fixed
+
+bs = log10(b_boot); 
+graph_correlations([bs, n_boot], 2, {'log_{10}(b)', 'n'}, 1, 0)
+%graph_correlations([bs, m_boot], 2, {'log_{10}(b)', 'm'}, 1, 0)
+graph_correlations([bs, n_boot, m_boot], 2, {'log_{10}(b)', 'n', 'm'}, 1, 0)
+
+
+meanb = mean(b_boot);
+sortb = sort(b_boot); 
+blo = sortb(50);
+bhi = sortb(1950);
+
+median_b = median(b_boot);
+
+% BIG Q: Use mean or median? Maybe should be using median here... 
+
+% Now compute k values as a function of depth
+if isempty(m_boot) && isempty(n_boot)
+    k_bootstrap = median_b*(phi.^m).*(T2ML).^n;
+    
+    bestFitMatrix(1,1) = median_b;
+    bestFitMatrix(2,1) = m;
+    bestFitMatrix(3,1) = n;
+    
+    totalErrorEstimate(1) = computeError(K, k_bootstrap);
+else
+    if isempty(m_boot)
+        median_n = median(n_boot);
+        k_bootstrap = median_b*(phi.^m).*(T2ML).^median_n;
+       
+        bestFitMatrix(1,1) = median_b;
+        bestFitMatrix(2,1) = m;
+        bestFitMatrix(3,1) = median_n;
+        
+        totalErrorEstimate(1) = computeError(K, k_bootstrap);
+
+    else
+        median_m = median(m_boot);
+        median_n = median(n_boot);
+        k_bootstrap = median_b*(phi.^median_m).*(T2ML).^median_n;
+        
+        bestFitMatrix(1,1) = median_b;
+        bestFitMatrix(2,1) = median_m;
+        bestFitMatrix(3,1) = median_n;
+        
+        totalErrorEstimate(1) = computeError(K, k_bootstrap);
+    end
+end
+
+%plotKwithz2(K, z, k_bootstrap)
+%plotKwithDepth(K,z,k_bootstrap)
+
+% k_estimates = [k_bootstrap];
+% k_names = [{'DPP'} {'Bootstrap'}];
+% 
+% %T2dist = flip(T2dist);
+% 
+% plotKwithDepth(K,z,T2dist,T2logbins,k_estimates,k_names)]
+
+%save(strcat(saveName,'_bootstrap_n_m_var.mat'),'bs','n_boot','m_boot')
+
+%% Basic solving for b for fixed n, m
+    % Given m and n, we can solve directly for b -> b = log(k) - m*log(phi) -
+    % n*log(T2ML). This is the 'direct' method.
+m = median_m;
+n = median_n;
+        
+C = @(m, n, lt, lp) m*lp + n*lt; 
+
+bdir_n1 = logK - C(m, n, logT2ML, logPhi); 
+
+bdir_n2 = logK - C(m, n, logT2ML, logPhi); 
+
+logb_mean = mean(bdir_n2);
+b_mean = 10.^logb_mean;
+bs_basic = 10.^(bdir_n2);
+
+
+logb_median = median(bdir_n2);
+median_b = 10.^logb_median;
+
+k_direct = median_b*(phi.^m).*(T2ML).^2;
+
+bestFitMatrix(1,2) = median_b;
+bestFitMatrix(2,2) = m;
+bestFitMatrix(3,2) = n;
+
+totalErrorEstimate(2) = computeError(K, k_direct);
+
+%save(strcat(saveName,'_basic_solving_n_m_var.mat'),'bs_basic','n','m')
 
 %% MCMC for solution to various parameters
 % Markov Chain Monte Carlo using Metropolis-Hastings algorithm. Assumes
@@ -180,7 +196,7 @@ sig_mcmc = paramhats(5,:);
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if figureson == 1
-    graph_correlations(paramhats, 2, {'T_B', 'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
+    graph_correlations(paramhats(2:end,:), 2, {'log_{10}(b)', 'n', 'm', '\sigma'}, 0, 0)
     all_lKpreds = zeros(length(T2ML), length(blog_mcmc)); 
     for k = 1:length(blog_mcmc)
         bbm = [blog_mcmc(k), sig_mcmc(k)]; 
@@ -217,6 +233,7 @@ bestFitMatrix(1,3) = b_median;
 bestFitMatrix(2,3) = m_median;
 bestFitMatrix(3,3) = n_median;
 
+%save(strcat(saveName,'_MCMC_n_m_var.mat'),'blog_mcmc','n_mcmc','m_mcmc')
 
 
 % % Compute b statistics from fixed n and m data
@@ -232,10 +249,12 @@ bestFitMatrix(3,3) = n_median;
 % bestFitMatrix(2,3) = m;
 % bestFitMatrix(3,3) = n;
 
+
 totalErrorEstimate(3) = computeError(K, k_mcmc);
 
-plotKwithDepth(K,z,T2dist,T2logbins,k_mcmc,[{'DPP'} {'MCMC'}], {'+'})
-
+if plotProfile == 1
+    plotKwithDepth(K,z,T2dist,T2logbins,k_mcmc,[{'DPP'} {'MCMC'}], {'+'})
+end
 
 % %% Make a matrix of all models so far
 % k_estimates = [k_bootstrap k_direct k_mcmc];

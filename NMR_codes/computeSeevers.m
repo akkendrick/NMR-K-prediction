@@ -1,7 +1,9 @@
 function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,totalErrorEstimate] = computeSeevers(site,n,m,figureson,wDirect)
 % Compute Seevers Models
-baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+%baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+baseDir = 'I:\My Drive\USGS Project\USGS Data\';
 
+% Sonic depths are relative to ground surface
 load('sonicCoreT2B.mat','sonicCoreT2BData')
 T2B_depth = sonicCoreT2BData.Depthm;
 T2B_depth = flipud(T2B_depth);
@@ -26,11 +28,11 @@ elseif strcmp(site,'Site1-WellG6')
 elseif strcmp(site,'Site1-WellG6above')
     site = 'Site1-WellG6';
     name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above'
+    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
 elseif strcmp(site,'Site1-WellG6below')
     site = 'Site1-WellG6';
     name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below'
+    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below';
 elseif strcmp(site,'Site2-WellPN1')
     name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
     nmrName = name;
@@ -52,6 +54,9 @@ logSumEch = log10(SumEch);
 
 bestFitMatrix = zeros(3,3);
 totalErrorEstimate = zeros(1,3);
+
+bestFitMatrix(:,2) = NaN;
+totalErrorEstimate(2) = NaN;
 
 k_bootstrap = [];
 k_mcmc = [];
@@ -81,7 +86,7 @@ interpT2B = interp1(T2B_depth, T2B_peak, nmrDepths)*10^-3; %Convert from ms to s
 seeversT2 = (T2ML.^-1 - interpT2B.^-1).^(-1);
 logSeeversT2 = log10(seeversT2);
 
-Nboot = 1000;
+Nboot = 2000;
 
 if isempty(n) && isempty(m)
     [b_boot, n_boot, m_boot] = bootstrap_fun([logSeeversT2, logPhi, logK], Nboot);
@@ -102,7 +107,7 @@ median_b = median(b_boot);
 
 % Now compute k values as a function of depth
 if isempty(m_boot) && isempty(n_boot)
-    k_bootstrap = median_b*(phi.^m).*(T2ML).^n;
+    k_bootstrap = median_b*(phi.^m).*((T2ML.^(-1)-interpT2B.^(-1)).^(-1)).^n;
     
     bestFitMatrix(1,1) = median_b;
     bestFitMatrix(2,1) = m;
@@ -112,7 +117,7 @@ if isempty(m_boot) && isempty(n_boot)
 else
     if isempty(m_boot)
         median_n = median(n_boot);
-        k_bootstrap = median_b*(phi.^m).*(T2ML).^median_n;
+        k_bootstrap = median_b*(phi.^m).*((T2ML.^(-1)-interpT2B.^(-1)).^(-1))^n;
        
         bestFitMatrix(1,1) = median_b;
         bestFitMatrix(2,1) = m;
@@ -123,7 +128,7 @@ else
     else
         median_m = median(m_boot);
         median_n = median(n_boot);
-        k_bootstrap = median_b*(phi.^median_m).*(T2ML).^median_n;
+        k_bootstrap = median_b*(phi.^m).*((T2ML.^(-1)-interpT2B.^(-1)).^(-1))^n;
         
         bestFitMatrix(1,1) = median_b;
         bestFitMatrix(2,1) = median_m;

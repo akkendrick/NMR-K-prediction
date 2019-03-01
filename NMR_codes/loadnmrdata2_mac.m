@@ -1,4 +1,4 @@
-function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s, SumEch_twm, SumEch_twm_3s] = loadnmrdata2(name)
+function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s, SumEch_twm, SumEch_twm_3s] = loadnmrdata3(name,baseDir)
     % this function loads a nmr data file namaed 'name' and defines the
     % variables. 
     
@@ -147,11 +147,11 @@ function [d, K, T2ML, phi, z, SumEch, log10K, log10T2, log10Porosity, SumEch_3s,
 
     elseif strcmp(name, 'all_data') == 1
         [~, Dkg, T2MLg, phig, zg, SumEchg, ~, ~, ~, SumEch_3sg, ...
-            SumEch_twmg, SumEch_twm_3sg] = loadnmrdata2('gems_all');
+            SumEch_twmg, SumEch_twm_3sg] = loadnmrdata2_mac('gems_all');
         [~, Dklar, T2MLlar, philar, zlar, SumEchlar, ~, ~, ~, SumEch_3slar, ...
-            SumEch_twmlar, SumEch_twm_3slar] = loadnmrdata2('dpnmr_larned_all');
+            SumEch_twmlar, SumEch_twm_3slar] = loadnmrdata2_mac('dpnmr_larned_all');
         [~, Dkleq, T2MLleq, phileq, zleq, SumEchleq, ~, ~, ~, SumEch_3sleq, ...
-            SumEch_twmleq, SumEch_twm_3sleq] = loadnmrdata2('dpnmr_leque_all');
+            SumEch_twmleq, SumEch_twm_3sleq] = loadnmrdata2_mac('dpnmr_leque_all');
         
 
         z = [ zg; zlar; zleq]; 

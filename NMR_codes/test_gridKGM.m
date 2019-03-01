@@ -13,7 +13,8 @@ close all
 
 site = 'Site2-WellPN2';
 
-baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+%baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+baseDir = 'I:\My Drive\USGS Project\USGS Data\';
 
 if strcmp(site,'Site1-WellG5')
     name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';

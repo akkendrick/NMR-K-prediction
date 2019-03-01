@@ -1,4 +1,4 @@
-function [paramhats, hps, likes, kpreds, accept_rat] = mcmc_nmr_full (Dk, T2ML, T2B, phi, z, Niter, stepsize, figureson)
+function [paramhats, hps, likes, kpreds, accept_rat] = mcmc_nmr_T2B(Dk, T2ML, T2B, phi, z, Niter, stepsize, figureson)
 kk = log10(Dk); 
 
 % parameters to search over: T2B, b, n, m

@@ -3,7 +3,8 @@
 
 all_names = {'Site1-WellG5','Site1-WellG5above','Site1-WellG5below','Site1-WellG6','Site1-WellG6above','Site1-WellG6below','Site2-WellPN1','Site2-WellPN2'};
 
-baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+%baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+baseDir = 'I:\My Drive\USGS Project\USGS Data\';
 
 
 C = {'-*k', '-*r', '-.b', '-.g', '-oc', '-om', '-or', '-*b', '-.b', '-ob', '--k'}; 

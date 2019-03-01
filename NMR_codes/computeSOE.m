@@ -1,3 +1,5 @@
+% computeSOE
+
 % Analyze SOE by plotting K_SOE vs K_DPP
 baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
 
@@ -6,6 +8,9 @@ n = [2 1 0];
 k_estimates = [];
 k_names = {'1:1','SOE n=2','SOE n=1','SOE n=0'};
 k_sym = {'+','*','o'};
+
+sites = {'
+
 
 for k = 1:length(n)
     k
@@ -108,10 +113,10 @@ for k = 1:length(n)
     [b_boot, n_boot] = bootstrap_fun([lt, kk], Nboot, n(k));    % n is fixed
    
     meanb(k) = mean(b_boot); 
-    meann(k) = n(k); 
+    meann(k) = mean(n_boot); 
     
     medianb(k) = median(b_boot);
-    mediann(k) = n(k);
+    mediann(k) = median(n_boot);
 
     SOE_K = medianb(k)*(SumEch).^mediann(k);
     k_estimates = [k_estimates SOE_K];
@@ -123,4 +128,3 @@ end
 
 plotKestKdpp(Dk,k_estimates,k_names,k_sym)
 title(siteName)
- 

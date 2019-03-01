@@ -43,6 +43,7 @@ function [logKpred] = KGMfun(x, xdata)
 
     % predicted data
     if size(xdata,2)==2
+        m
         logKpred = ltinv + log10(t1) + m*lphi + 2*log10(SQterm-f12);
     else
         logKpred = ltinv + log10(t1) + 2*log10(SQterm-f12);

@@ -1,0 +1,1 @@
+% Calculate T2 statistics, plot as a function of K, look for patterns

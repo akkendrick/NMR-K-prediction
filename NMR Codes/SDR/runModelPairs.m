@@ -68,12 +68,12 @@ directMatrix = [];
 totalbMatrix = zeros(3,length(m),length(siteList));
 totalmMatrix = zeros(3,length(m),length(siteList));
 totalErrorMatrix = zeros(3,length(m),length(siteList));
-
 tic
 
 if isempty(m) && isempty(n)
     currentFitMatrix = [];
     currentErrorMatrix = [];
+    
     for i = 1:length(siteList)
         siteName = siteList{i}
 
@@ -135,7 +135,8 @@ else
             
             tempb(:,i) = bestFitMatrix(1,:)';
             tempm(:,i) = bestFitMatrix(2,:)';
-            
+            tempK{:,i} = k_boot;
+            DPP_K{:,i} = K;
             tempError(:,i) = totalErrorEstimate(1,:)';
             
         end
@@ -143,6 +144,8 @@ else
         matrixKey(1,j) = n(j);
         matrixKey(2,j) = m(j);
         
+        DPP_KMatrix(:,j,:) = DPP_K;
+        totalKMatrix(:,j,:) = tempK;
         totalmMatrix(:,j,:) = tempm;
         totalbMatrix(:,j,:) = tempb;
         totalErrorMatrix(:,j,:) = tempError;
@@ -152,6 +155,6 @@ end
         
 toc            
 
-save('SDR_T2lm_bestFit_1120_m1_n2.mat','siteList','m','n','matrixKey','totalbMatrix','totalmMatrix','totalErrorMatrix')
+save('SDR_T2lm_bestFit_1120_m1_n2.mat','siteList','m','n','matrixKey','totalbMatrix','totalmMatrix','totalErrorMatrix','totalKMatrix')
             
             

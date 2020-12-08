@@ -1,4 +1,6 @@
-# Predicting K from NMR data
+# Dec 2020: This repo won't work out of the box! Needs formatting/reorg
+
+## Predicting K from NMR data
 This repo consists of code to find parameter values for models relating NMR measurements to hydraulic conductivity K. The models are given in Maurer and Knight, 2016. 
 
 ## Data

@@ -158,8 +158,12 @@ for jj = 1:length(allT2ML)
         is_bimodal(jj) = 0;
         bimodalT2(jj,1) = NaN;
 
-        
     end
+   
 end
+
+disp('Median location of min between T2 modes in s')
+median(bimodalT2,'omitnan')
+
 
 

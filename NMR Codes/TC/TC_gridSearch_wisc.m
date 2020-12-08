@@ -8,7 +8,7 @@ load enso
 % siteList = [{'Site1-WellG6'} {'Site1-WellG6above'} {'Site1-WellG6below'} {'Site1-WellG5'} {'Site1-WellG5above'}...
 %     {'Site1-WellG5below'} {'Site2-WellPN1'} {'Site2-WellPN2'}];
 
-siteList = [{'Site1-WellG5'},{'Site1-WellG6'},{'Site2-WellPN1'},{'Site2-WellPN2'}];
+siteList = [{"Site1-WellG5"},{"Site1-WellG6"},{"Site2-WellPN1"},{"Site2-WellPN2"}];
 %siteList = [{'Site2-WellPN2'}];
 
 offsets = [0.75,0.95,0.75,0.75];
@@ -33,8 +33,8 @@ offsets = [0.75,0.95,0.75,0.75];
 cutoff = 42.1*10^-3; %using median of the min T2 time for bimodal distributions
 % cutoff = 33*10^-3;
 
-m = [0];
-n = [2];
+m = 1;
+n = 2;
 
 figureson = 0;
 wDirect = 1;
@@ -66,13 +66,13 @@ for j = 1:length(siteList)
     %for i = 20:21
 
 
-        [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,MAEError,meanErrorFactor,medianErrorFactor] = computeTCperm_mod(baseName,n,m,cutoff(i),figureson,offsets(j));
+        [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,totalError,meanErrorFactor,medianErrorFactor,indexQuotient] = computeTCperm(baseName,n,m,cutoff,figureson);
 
         mTemp(i) = bestFitMatrix(3);
         nTemp(i) = bestFitMatrix(2);
         cTemp(i) = bestFitMatrix(1);
         %errorTemp(i) = log10(MAEError); %Why take log10 here?
-        errorTemp(i) = MAEError;
+        errorTemp(i) = totalError;
         meanFactorTemp(i) = meanErrorFactor;
         medianFactorTemp(i) = medianErrorFactor;
 
@@ -88,14 +88,15 @@ for j = 1:length(siteList)
 end
 toc
 
-save('medBimodalCutoffoptC_n2_m0_RMSE_2000.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
+save('TCout.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 'totalErrorMatrix','totalmeanErrorFactorMatrix','totalmedianErrorFactorMatrix','cutoff','siteList','n','m')
 
 %%
+% Just run this part to save time
 %load('optimalCutoffTable_n2_m1_RMSE_2000.mat')
 %cutoff = (20:2:800)*10^-3;
 %totalmeanErrorFactorMatrix = totalErrorFactorMatrix;
-load('medBimodalCutoffoptC_n2_m0_RMSE_2000.mat')
+load('TCout.mat')
 
 smoothWindow = 5;
 
@@ -141,6 +142,8 @@ for kk = 1:length(siteList)
 %     histogram(totalErrorMatrix(kk,:),edges)
 end
 
+bestMeanErrorFactorMatrix
+bestMedianErrorFactorMatrix
 bestCutoff
 bestC
 

@@ -1,4 +1,4 @@
-function [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,totalError,indexQuotient] = computeTCperm_2(baseName,n,m,cutoff,figureson)
+function [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,totalError,meanErrorFactor,medianErrorFactor,indexQuotient] = computeTCperm(baseName,n,m,cutoff,figureson)
 
 %baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
 baseDir = 'I:\My Drive\Stanford\USGS Project\Field Data\USGS Data\';
@@ -154,14 +154,12 @@ for k = 1:length(ind)
 
 end
 
-BVI
-median(BVI)
-mean(BVI)
-std(BVI)
-
-
-FFI
-
+% BVI
+% median(BVI)
+% mean(BVI)
+% std(BVI)
+% 
+% FFI
 
 lkTC = @(c,m,n,lPhi,logFrac) log10(c) + m*lPhi + n*(logFrac);
 
@@ -212,8 +210,9 @@ kTC_best
 %         {'DPP','T-C 33ms'},{'+'})
 % end
 
-%totalError = computeError(K,kTC_best);
-totalError = mean(estimateKdiffFactor(K,kTC_best,1));
+totalError = computeError(K,kTC_best);
+meanErrorFactor = mean(estimateKdiffFactor(K,kTC_best,1));
+medianErrorFactor = median(estimateKdiffFactor(K,kTC_best,1));
 
 %dlubacError = computeError(K,kTC_Dlubac);
 

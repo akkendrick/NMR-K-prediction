@@ -1,5 +1,6 @@
 % Analyze SOE by plotting K_SOE vs K_DPP
-baseDir = '/Volumes/GoogleDrive/My Drive/USGS Project/USGS Data/';
+%baseDir = '/Volumes/GoogleDrive/My Drive/Stanford/USGS Project/USGS Data/';
+baseDir = 'I:\My Drive\Stanford\USGS Project\Field Data\USGS Data\';
 
 n = [2 1 0];
 
@@ -12,84 +13,7 @@ for k = 1:length(n)
     site = 'Site2-WellPN2'
     siteName = site; 
     
-    if strcmp(site,'Site1-WellG5')
-            name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = name;
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif  strcmp(site,'Site1-WellG5above')
-            site = 'Site1-WellG5';
-            name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif  strcmp(site,'Site1-WellG5below')
-            site = 'Site1-WellG5';
-            name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site1-WellG6')
-            name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-            nmrName = name;
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site1-WellG6above')
-            site = 'Site1-WellG6';
-            name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-            nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site1-WellG6below')
-            site = 'Site1-WellG6';
-            name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-            nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below';
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site2-WellPN1')
-            name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = name;
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site2-WellPN2')
-            name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1';
-            nmrName = name;
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        else
-            nmrName = site;
-    end
-
+    [T2dist, T2logbins,nmrName] = loadRawNMRdata(site);
     % load data file
     [d, Dk, T2ML, phi, z, SumEch, kk, lt, lp, SumEch_3s, SumEch_twm, ...
         SumEch_twm_3s] = loadnmrdata2(nmrName); 

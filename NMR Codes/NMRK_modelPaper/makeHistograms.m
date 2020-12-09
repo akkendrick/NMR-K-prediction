@@ -38,8 +38,44 @@ SDRK = totalKMatrix;
 DPP_K = DPP_KMatrix;
 
 for k = 1:length(siteList)
-  [SDR_errorSign,SDR_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SDRK{:,:,k},1);
+  
+   [SDR_errorSign,SDR_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SDRK{:,:,k},1);
    SDR_errorSigns{k,:} = SDR_errorSign;
    SDR_errorFactors{k,:} = SDR_errorFactor;
  
 end
+
+% SOE Model
+
+computeSOE
+
+SOEn = mediann;
+SOEb = medianb;
+SOEK = k_estimates;
+
+for k = 1:length(siteList)
+  
+   [SOE_errorSign,SOE_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SDRK{:,:,k},1);
+   SOE_errorSigns{k,:} = SOE_errorSign;
+   SOE_errorFactors{k,:} = SOE_errorFactor;
+ 
+end
+
+%%
+% KGM Model
+
+calcKGM
+%%
+% Seevers Model 
+
+Seeversm = [m m m m]';
+Seeversn = [n n n n]';
+
+for k = 1:length(siteList)
+    
+    site = siteList{k};
+    [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,b_boot,totalErrorEstimate = computeSeevers(site,n,m,figureson,wDirect)
+
+
+end
+

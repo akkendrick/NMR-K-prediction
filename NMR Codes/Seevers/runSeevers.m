@@ -4,8 +4,8 @@
 close all
 clear
 
-% siteList = [{'Site1-WellG6'} {'Site1-WellG6above'} {'Site1-WellG6below'}...
-%    {'Site1-WellG5'} {'Site1-WellG5above'} {'Site1-WellG5below'} {'Site2-WellPN1'} {'Site2-WellPN2'}];
+siteList = [{'Site1-WellG6'} {'Site1-WellG6above'} {'Site1-WellG6below'}...
+   {'Site1-WellG5'} {'Site1-WellG5above'} {'Site1-WellG5below'} {'Site2-WellPN1'} {'Site2-WellPN2'}];
 
 % siteList = [{'Site1-WellG5'} {'Site1-WellG6'} {'Site2-WellPN1'} {'Site2-WellPN2'}];
 
@@ -14,9 +14,9 @@ clear
 %    'dpnmrA11','dpnmrA12','dpnmrC1S','dpnmrC1SE','dpnmrC1SW',...
 %    'dpnmr_leque_east','dpnmr_leque_west'};
 
- siteList = {'dpnmr_larned_east','dpnmr_larned_lwph',...
-   'dpnmrA11','dpnmrA12','dpnmrC1S','dpnmrC1SE','dpnmrC1SW',...
-   'dpnmr_leque_east','dpnmr_leque_west'};
+%  siteList = {'dpnmr_larned_east','dpnmr_larned_lwph',...
+%    'dpnmrA11','dpnmrA12','dpnmrC1S','dpnmrC1SE','dpnmrC1SW',...
+%    'dpnmr_leque_east','dpnmr_leque_west'};
 
 % %m = [0 1 2 4 0 1 2 4];
 %n = [1 1 1 1 2 2 2 2];
@@ -94,5 +94,5 @@ end
 
 toc
 
-save('Seevers_bestFit_0425_m1_n2_Maurer_highK_T2BMap.mat','siteList','m','n','matrixKey','totalbMatrix','b_boot_all','totalErrorMatrix','currentFitMatrix')
+save('Seevers_dat.mat','siteList','m','n','matrixKey','totalbMatrix','b_boot_all','totalErrorMatrix','currentFitMatrix')
 

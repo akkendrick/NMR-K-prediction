@@ -1,66 +1,16 @@
-function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,b_boot,totalErrorEstimate] = computeSeevers(site,n,m,figureson,wDirect)
-% Compute Seevers Models
+x% Compute Seevers Models
 %baseDir = '/Volumes/GoogleDrive/My Drive/Stanford/USGS Project/Field Data/USGS Data/';
 % baseDir = 'I:\My Drive\Stanford\USGS Project\Field Data\USGS Data\';
 
 %baseDir = '/Volumes/GoogleDrive/My Drive/Stanford/USGS Project/Kansas_Wash_Data/';
-baseDir = 'I:\My Drive\Stanford\USGS Project\Kansas_Wash_Data\';
 
-% Sonic depths are relative to ground surface
-load('sonicCoreT2B.mat','sonicCoreT2BData')
-T2B_depth = sonicCoreT2BData.Depthm;
-T2B_depth = flipud(T2B_depth);
-
-T2B_peak = sonicCoreT2BData.T2Bpeak;
-T2B_peak = flipud(T2B_peak); 
-
-if strcmp(site,'Site1-WellG5')
-    name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-    nmrName = name;
-elseif  strcmp(site,'Site1-WellG5above')
-    site = 'Site1-WellG5';
-    name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-    nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
-elseif  strcmp(site,'Site1-WellG5below')
-    site = 'Site1-WellG5';
-    name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-    nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
-elseif strcmp(site,'Site1-WellG6')
-    name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = name;
-elseif strcmp(site,'Site1-WellG6above')
-    site = 'Site1-WellG6';
-    name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
-elseif strcmp(site,'Site1-WellG6below')
-    site = 'Site1-WellG6';
-    name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-    nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below';
-elseif strcmp(site,'Site2-WellPN1')
-    name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
-    nmrName = name;
-elseif strcmp(site,'Site2-WellPN2')
-    name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1';
-    nmrName = name;
-else
-    name = site;
-    nmrName = name;
-end
-% 
-% in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-% in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-in1 = [baseDir site '/' name '_T2_dist' '.txt']; 
-in2 = [baseDir site '/' name '_T2_bins_log10s' '.txt']; 
-
-T2dist = load(in1); 
-T2logbins = load(in2);
+[T2dist, T2logbins,nmrName] = loadRawNMRdata(site);
 
 [d, K, T2ML, phi, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
 SumEch_twm_3s] = loadnmrdata2(nmrName); 
 
-KcutoffLower = 5*10^(-4);
-KcutoffHigher = 1*10^(-2);
+KcutoffLower = 0;
+KcutoffHigher = 1*10^(5);
 
 K = K(K>KcutoffLower & K<KcutoffHigher);
 phi = phi(K>KcutoffLower & K<KcutoffHigher);

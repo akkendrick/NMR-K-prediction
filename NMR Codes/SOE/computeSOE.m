@@ -20,84 +20,9 @@ siteList = [{'Site1-WellG5'} {'Site1-WellG6'}  {'Site2-WellPN1'} {'Site2-WellPN2
 for k = 1:length(siteList)
 
     site = siteList{k}; 
-    siteName = site;
-    if strcmp(site,'Site1-WellG5')
-            name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = name;
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif  strcmp(site,'Site1-WellG5above')
-            site = 'Site1-WellG5';
-            name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_above';
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif  strcmp(site,'Site1-WellG5below')
-            site = 'Site1-WellG5';
-            name = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = 'G5_W1_tr5_20x_16p5_up_F1n2_wRIN_wRFI_Reg50_Va1_below';
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site1-WellG6')
-            name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-            nmrName = name;
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site1-WellG6above')
-            site = 'Site1-WellG6';
-            name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-            nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_above';
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site1-WellG6below')
-            site = 'Site1-WellG6';
-            name = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1';
-            nmrName = 'G6_W2_tr5_20x_16p75_up_F_wRIN_wRFI_reg50_Va1_below';
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site2-WellPN1')
-            name = 'Pl_W1_Tr5_20x_MPp75aLS_F1n2_wRIN_wRFI_Reg50_Va1';
-            nmrName = name;
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        elseif strcmp(site,'Site2-WellPN2')
-            name = 'W2_Tr5_20x_MPp75aLS_Reg50_wRIN_wRFI_Va1';
-            nmrName = name;
-
-            in1 = [baseDir site '/' name '/' name '_T2_dist' '.txt']; 
-            in2 = [baseDir site '/' name '/' name '_T2_bins_log10s' '.txt']; 
-
-            T2dist = load(in1); 
-            T2logbins = load(in2);
-        else
-            nmrName = site;
-    end
+    siteName = site
+    
+    [T2dist, T2logbins,nmrName] = loadRawNMRdata(site);
 
     % load data file
     [d, Dk, T2ML, phi, z, SumEch, kk, lt, lp, SumEch_3s, SumEch_twm, ...
@@ -132,6 +57,6 @@ for k = 1:length(siteList)
     
 end
 
-save('SOE_n1_529.mat','siteList','b_boot_all','medianb','mediann','k_estimates','errorEstimate')
+save('SOE_dat.mat','siteList','b_boot_all','medianb','mediann','k_estimates','errorEstimate')
 % plotKestKdpp(Dk,k_estimates,k_names,k_sym)
 % title(siteName)

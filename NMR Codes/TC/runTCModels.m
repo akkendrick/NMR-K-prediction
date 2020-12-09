@@ -19,9 +19,9 @@ siteList = [{'Site1-WellG6'} {'Site1-WellG5'} {'Site2-WellPN1'} {'Site2-WellPN2'
 %m = [0 1 2 4 0 1 2 4] ;
 %n = [1 1 1 1 2 2 2 2];
 
-cutoff = 240*10^-3;
+cutoff = 42.1*10^-3;
 m = [1];
-n = [1];
+n = [2];
 
 figureson = 0;
 wDirect = 1;
@@ -54,9 +54,8 @@ else
             baseName = siteList{i};
 
             [K,z,T2dist,T2logbins,kTC_best,bestFitMatrix,totalErrorEstimate,indexQuotient] = computeTCperm(baseName,n(j),m(j),cutoff,figureson);
-            temp = size(indexQuotient);
-            
-            plotKestKdpp(K,kKT_best,[{'DPP'} {'TC'}],[{'+'} {'+'}])
+             
+            plotKestKdpp(K,kTC_best,[{'DPP'} {'TC'}],[{'+'} {'+'}])
             
             tempb(:,i) = bestFitMatrix(1,:)';
             tempError(:,i) = totalErrorEstimate(1,:)';
@@ -73,6 +72,6 @@ else
 end
 
 toc
-save('TC_model_results_240.mat','m','n','matrixKey','totalbMatrix','totalErrorMatrix','totalIndexQuotient')
+save('TC_results.mat','m','n','matrixKey','totalbMatrix','totalErrorMatrix','totalIndexQuotient')
 
         

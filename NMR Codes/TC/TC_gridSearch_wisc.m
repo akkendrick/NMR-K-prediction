@@ -71,6 +71,8 @@ for j = 1:length(siteList)
         mTemp(i) = bestFitMatrix(3);
         nTemp(i) = bestFitMatrix(2);
         cTemp(i) = bestFitMatrix(1);
+        kTC{i} = kTC_best;
+        
         %errorTemp(i) = log10(MAEError); %Why take log10 here?
         errorTemp(i) = totalError;
         meanFactorTemp(i) = meanErrorFactor;
@@ -78,6 +80,7 @@ for j = 1:length(siteList)
 
     end
     
+    totalkTC{j} = kTC;
     totalmMatrix(j,:) = mTemp;
     totalnMatrix(j,:) = nTemp;
     totalcMatrix(j,:) = cTemp;

@@ -1,4 +1,6 @@
-x% Compute Seevers Models
+function [K,z,T2dist,T2logbins,k_bootstrap,k_mcmc,k_direct,bestFitMatrix,b_boot,totalErrorEstimate] = computeSeevers(site,n,m,figureson,wDirect)
+
+% Compute Seevers Models
 %baseDir = '/Volumes/GoogleDrive/My Drive/Stanford/USGS Project/Field Data/USGS Data/';
 % baseDir = 'I:\My Drive\Stanford\USGS Project\Field Data\USGS Data\';
 

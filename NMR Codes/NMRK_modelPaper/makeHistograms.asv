@@ -97,10 +97,9 @@ end
 TCm = [m m m m];
 TCn = [n n n n];
 
-TC_gridSearch_wisc;
+runTCModels;
 
 cutoff = [cutoff cutoff cutoff cutoff];
-TCc = totalcMatrix;
-KTC = totalkTC;
+TCb = totalbMatrix;
+TCindexquotient = totalIndexQuotient;
 
-%

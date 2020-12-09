@@ -169,7 +169,7 @@ lkTC = @(c,m,n,lPhi,logFrac) log10(c) + m*lPhi + n*(logFrac);
 % estimate empirical parameters
 indexQuotient = log10(FFI./BVI)';
 
-Nboot = 1000;
+Nboot = 2000;
 %
 % n can vary
 %[c_boot, n_boot, m_boot] = bootstrap_fun([indexQuotient, logPhi, logK], Nboot,n);

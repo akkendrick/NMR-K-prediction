@@ -1,4 +1,7 @@
 % Make nice histograms of 5 NMR-K models on Wisconsin data
+clear
+close all
+
 %12/7/20 
 %Using m = 1, n = 2 IF THIS IS CHANGED CHECK MAIN MODEL FILE CODE, NEED TO
 %UPDATE VALUES IN SCRIPTS
@@ -44,11 +47,11 @@ DPP_K = DPP_KMatrix;
 for k = 1:length(siteList)
   
    [SDR_errorSign,SDR_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SDRK{:,:,k},1);
-   SDR_errorSigns{k,:} = SDR_errorSign;
-   SDR_errorFactors{k,:} = SDR_errorFactor;
+   SDR_errorSigns{:,k} = SDR_errorSign;
+   SDR_errorFactors{:,k} = SDR_errorFactor;
  
 end
-
+%%
 % SOE Model
 
 computeSOE
@@ -56,12 +59,13 @@ computeSOE
 SOEn = mediann;
 SOEb = medianb;
 SOEK = k_estimates;
-
+%%
 for k = 1:length(siteList)
-  
-   [SOE_errorSign,SOE_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SOEK{:,:,k},1);
-   SOE_errorSigns{k,:} = SOE_errorSign;
-   SOE_errorFactors{k,:} = SOE_errorFactor;
+   k
+   
+   [SOE_errorSign,SOE_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SOEK{:,k},1);
+   SOE_errorSigns{:,k} = SOE_errorSign;
+   SOE_errorFactors{:,k} = SOE_errorFactor;
  
 end
 
@@ -83,12 +87,11 @@ Seeversn = [n n n n]';
 for k = 1:length(siteList)
     
     site = siteList{k}
-    [K{k},z,T2dist,T2logbins,k_bootstrap{k},k_mcmc{k},k_direct{k},bestFitMatrix{k},b_boot{k},totalErrorEstimate{k}] = computeSeevers(site,Seeversn(k),Seeversm(k),figureson,wDirect);
-    SeeversK = k_bootstrap;
+    [K,z,T2dist,T2logbins,SeeversK{k},k_mcmc,k_direct,bestFitMatrix,b_boot,totalErrorEstimate] = computeSeevers(site,Seeversn(k),Seeversm(k),figureson,wDirect);
    
-   [Seevers_errorSign,Seevers_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SDRK{:,:,k},1);
-   Seevers_errorSigns{k,:} = Seevers_errorSign;
-   Seevers_errorFactors{k,:} = Seevers_errorFactor;
+   [Seevers_errorSign,Seevers_errorFactor] = estimateKdiffFactor_withSign(DPP_K{:,:,k},SeeversK{k},1);
+   Seevers_errorSigns{:,k} = Seevers_errorSign;
+   Seevers_errorFactors{:,k} = Seevers_errorFactor;
 end
 
 %%
@@ -100,7 +103,152 @@ TCn = [n n n n];
 TC_gridSearch_wisc;
 
 cutoff = [cutoff cutoff cutoff cutoff];
-TCc = totalcMatrix;
-KTC = totalkTC;
+cTC = totalcMatrix;
 
+for k = 1:length(siteList)
+
+    [TC_errorSign,TC_errorFactor] = estimateKdiffFactor_withSign(DPP_K{k},totalkTC{k}{:},1);
+    TC_errorSigns{:,k} = TC_errorSign;
+    TC_errorFactors{:,k} = TC_errorFactor;
+    
+end
 %
+
+%%
+% Fix higher errors to make sure they show up on the plot, set +/-;
+
+plottedTCerrorFactor = vertcat(TC_errorFactors{:});
+plottedTCerrorFactor(plottedTCerrorFactor >= 100) = 200;
+%plottedTCerrorFactor = plottedTCerrorFactor.*vertcat(TC_errorSigns{:});
+
+plottedSDRerrorFactor = vertcat(SDR_errorFactors{:});
+plottedSDRerrorFactor(plottedSDRerrorFactor >= 100) = 200;
+%plottedSDRerrorFactor = plottedSDRerrorFactor.*vertcat(SDR_errorSigns{:});
+
+plottedSeeverserrorFactor = vertcat(Seevers_errorFactors{:});
+plottedSeeverserrorFactor(plottedSeeverserrorFactor >= 100) = 200;
+%plottedSeeverserrorFactor = plottedSeeverserrorFactor.*vertcat(Seevers_errorSigns{:});
+
+plottedKGMerrorFactor = vertcat(KGM_errorFactors{:});
+plottedKGMerrorFactor(plottedKGMerrorFactor >= 100) = 200;
+%plottedKGMerrorFactor = plottedKGMerrorFactor.*vertcat(KGM_errorSigns{:});
+
+plottedSOEerrorFactor = vertcat(SOE_errorFactors{:});
+plottedSOEerrorFactor(plottedSOEerrorFactor >= 100) = 200;
+%plottedSOEerrorFactor = plottedSOEerrorFactor.*vertcat(SOE_errorSigns{:});
+
+figure(1)
+subplot(2,3,1)
+title('SDR Model')
+
+edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+edges = 10.^edgesLog;
+
+hold on
+grid on
+box on
+grid minor
+
+histDataSDR = log10(plottedSDRerrorFactor);
+histDataSDR = histDataSDR.*vertcat(SDR_errorSigns{:});
+histogram(histDataSDR,edgesLog)
+ylim([0 50])
+%ylim([0 30])
+
+xticks([-2,-1,0,1,2])%in log space
+xticklabels({'-100','-10','0','10','100'})
+
+xlabel('K Difference Factor')
+ylabel('Counts')
+set(gca,'FontSize',14)
+
+subplot(2,3,2)
+title('SOE Model')
+
+edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+edges = 10.^edgesLog;
+
+hold on
+grid on
+box on
+grid minor
+
+histDataSOE = log10(plottedSOEerrorFactor);
+histDataSOE = histDataSOE.*vertcat(SOE_errorSigns{:});
+histogram(histDataSOE,edgesLog)
+ylim([0 50])
+%ylim([0 30])
+xticks([-2,-1,0,1,2])%in log space
+
+xticklabels({'-100','-10','0','10','100'})
+xlabel('K Difference Factor')
+ylabel('Counts')
+set(gca,'FontSize',14)
+
+subplot(2,3,3)
+title('Seevers Model')
+
+edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+edges = 10.^edgesLog;
+
+hold on
+grid on
+box on
+grid minor
+
+histDataSeevers = log10(plottedSeeverserrorFactor);
+histDataSeevers = histDataSeevers.*vertcat(Seevers_errorSigns{:});
+histogram(histDataSeevers,edgesLog)
+ylim([0 50])
+%ylim([0 30])
+xticks([-2,-1,0,1,2])%in log space
+xticklabels({'-100','-10','0','10','100'})
+xlabel('K Difference Factor')
+ylabel('Counts')
+set(gca,'FontSize',14)
+
+subplot(2,3,4)
+title('KGM Model')
+
+edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+edges = 10.^edgesLog;
+
+hold on
+grid on
+box on
+grid minor
+
+histDataKGM = log10(plottedKGMerrorFactor);
+histDataKGM = histDataKGM.*vertcat(KGM_errorSigns{:});
+histogram(histDataKGM,edgesLog)
+ylim([0 50])
+%ylim([0 30])
+
+xticks([-2,-1,0,1,2])%in log space
+xticklabels({'-100','-10','0','10','100'})
+xlabel('K Difference Factor')
+ylabel('Counts')
+set(gca,'FontSize',14)
+
+subplot(2,3,5)
+title('TC Model')
+
+edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+edges = 10.^edgesLog;
+
+hold on
+grid on
+box on
+grid minor
+
+histDataTC = log10(plottedTCerrorFactor);
+histDataTC = histDataTC.*vertcat(TC_errorSigns{:});
+histogram(histDataTC,edgesLog)
+ylim([0 50])
+%ylim([0 30])
+
+xticks([-2,-1,0,1,2])%in log space
+xticklabels({'-100','-10','0','10','100'})
+xlabel('K Difference Factor')
+ylabel('Counts')
+set(gca,'FontSize',14)

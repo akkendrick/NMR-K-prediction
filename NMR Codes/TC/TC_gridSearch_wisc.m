@@ -1,7 +1,7 @@
 % Run Timur-Coates Model Estimates
 % Range over pairs of m and n values
-close all
-clear
+% close all
+% clear
 
 load enso 
 
@@ -80,6 +80,8 @@ for j = 1:length(siteList)
 
     end
     
+    DPP_K{j} = K;
+    
     totalkTC{j} = kTC;
     totalmMatrix(j,:) = mTemp;
     totalnMatrix(j,:) = nTemp;
@@ -144,10 +146,10 @@ for kk = 1:length(siteList)
 %     subplot(2,2,kk)
 %     histogram(totalErrorMatrix(kk,:),edges)
 end
-
-bestMeanErrorFactorMatrix
-bestMedianErrorFactorMatrix
-bestCutoff
-bestC
-
+% 
+% bestMeanErrorFactorMatrix
+% bestMedianErrorFactorMatrix
+% bestCutoff
+% bestC
+% 
 

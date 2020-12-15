@@ -1,4 +1,4 @@
-% Make nice histograms of 5 NMR-K models on Wisconsin data
+% Make nice histograms of 4 NMR-K models on Wisconsin data
 clear
 close all
 
@@ -95,50 +95,81 @@ for k = 1:length(siteList)
 end
 
 %%
-%TC model
+% %TC model 42.1
+% 
+% TCm = [m m m m];
+% TCn = [n n n n];
+% 
+% TC_gridSearch_wisc;
+% 
+% cutoff = [cutoff cutoff cutoff cutoff];
+% cTC = totalcMatrix;
+% 
+% for k = 1:length(siteList)
+% 
+%     [TC_errorSign,TC_errorFactor] = estimateKdiffFactor_withSign(DPP_K{k},totalkTC{k}{:},1);
+%     TC_errorSigns{:,k} = TC_errorSign;
+%     TC_errorFactors{:,k} = TC_errorFactor;
+%     
+% end
+% 
+% %TC model 33
+% 
+% TCm = [m m m m];
+% TCn = [n n n n];
+% 
+% TC_gridSearch_wisc_33;
+% 
+% cutoffRef = [cutoff cutoff cutoff cutoff];
+% cTCRef = totalcMatrix;
+% 
+% for k = 1:length(siteList)
+% 
+%     [TC_errorSign,TC_errorFactor] = estimateKdiffFactor_withSign(DPP_K{k},totalkTC{k}{:},1);
+%     TC_errorSigns_ref{:,k} = TC_errorSign;
+%     TC_errorFactors_ref{:,k} = TC_errorFactor;
+%     
+% end
+% %
 
-TCm = [m m m m];
-TCn = [n n n n];
+%%
+% Check if higher errors are present
+% plottedTCerrorFactor = vertcat(TC_errorFactors{:});
+% plottedTCerrorFactor_ref = vertcat(TC_errorFactors_ref{:});
+plottedSDRerrorFactor = vertcat(SDR_errorFactors{:});
+plottedSeeverserrorFactor = vertcat(Seevers_errorFactors{:});
+plottedKGMerrorFactor = vertcat(KGM_errorFactors{:});
+plottedSOEerrorFactor = vertcat(SOE_errorFactors{:});
 
-TC_gridSearch_wisc;
-
-cutoff = [cutoff cutoff cutoff cutoff];
-cTC = totalcMatrix;
-
-for k = 1:length(siteList)
-
-    [TC_errorSign,TC_errorFactor] = estimateKdiffFactor_withSign(DPP_K{k},totalkTC{k}{:},1);
-    TC_errorSigns{:,k} = TC_errorSign;
-    TC_errorFactors{:,k} = TC_errorFactor;
-    
-end
-%
+% maxTCerrorFactor = max(plottedTCerrorFactor)
+% maxTCerrorFactor_ref = max(plottedTCerrorFactor_ref)
+maxSDRerrorFactor = max(plottedSDRerrorFactor)
+maxSOEerrorFactor = max(plottedSOEerrorFactor)
+maxKGMerrorFactor = max(plottedKGMerrorFactor)
+maxSeeverserrorFactor = max(plottedSeeverserrorFactor)
 
 %%
 % Fix higher errors to make sure they show up on the plot, set +/-;
 
-plottedTCerrorFactor = vertcat(TC_errorFactors{:});
-plottedTCerrorFactor(plottedTCerrorFactor >= 100) = 200;
-%plottedTCerrorFactor = plottedTCerrorFactor.*vertcat(TC_errorSigns{:});
+% plottedTCerrorFactor(plottedTCerrorFactor >= 100) = 200;
+% %plottedTCerrorFactor = plottedTCerrorFactor.*vertcat(TC_errorSigns{:});
+% 
+% plottedTCerrorFactor_ref(plottedTCerrorFactor_ref >= 100) = 200;
 
-plottedSDRerrorFactor = vertcat(SDR_errorFactors{:});
 plottedSDRerrorFactor(plottedSDRerrorFactor >= 100) = 200;
 %plottedSDRerrorFactor = plottedSDRerrorFactor.*vertcat(SDR_errorSigns{:});
 
-plottedSeeverserrorFactor = vertcat(Seevers_errorFactors{:});
 plottedSeeverserrorFactor(plottedSeeverserrorFactor >= 100) = 200;
 %plottedSeeverserrorFactor = plottedSeeverserrorFactor.*vertcat(Seevers_errorSigns{:});
 
-plottedKGMerrorFactor = vertcat(KGM_errorFactors{:});
 plottedKGMerrorFactor(plottedKGMerrorFactor >= 100) = 200;
 %plottedKGMerrorFactor = plottedKGMerrorFactor.*vertcat(KGM_errorSigns{:});
 
-plottedSOEerrorFactor = vertcat(SOE_errorFactors{:});
 plottedSOEerrorFactor(plottedSOEerrorFactor >= 100) = 200;
 %plottedSOEerrorFactor = plottedSOEerrorFactor.*vertcat(SOE_errorSigns{:});
 
 figure(1)
-subplot(2,3,1)
+subplot(2,2,1)
 title('SDR Model')
 
 edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
@@ -155,6 +186,7 @@ histogram(histDataSDR,edgesLog)
 ylim([0 50])
 %ylim([0 30])
 
+text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSDRerrorFactor))),'FontSize',14)
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})
 
@@ -162,7 +194,7 @@ xlabel('K Difference Factor')
 ylabel('Counts')
 set(gca,'FontSize',14)
 
-subplot(2,3,2)
+subplot(2,2,2)
 title('SOE Model')
 
 edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
@@ -172,7 +204,7 @@ hold on
 grid on
 box on
 grid minor
-
+text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSOEerrorFactor))),'FontSize',14)
 histDataSOE = log10(plottedSOEerrorFactor);
 histDataSOE = histDataSOE.*vertcat(SOE_errorSigns{:});
 histogram(histDataSOE,edgesLog)
@@ -185,7 +217,7 @@ xlabel('K Difference Factor')
 ylabel('Counts')
 set(gca,'FontSize',14)
 
-subplot(2,3,3)
+subplot(2,2,3)
 title('Seevers Model')
 
 edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
@@ -206,8 +238,9 @@ xticklabels({'-100','-10','0','10','100'})
 xlabel('K Difference Factor')
 ylabel('Counts')
 set(gca,'FontSize',14)
+text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSeeverserrorFactor))),'FontSize',14)
 
-subplot(2,3,4)
+subplot(2,2,4)
 title('KGM Model')
 
 edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
@@ -223,6 +256,7 @@ histDataKGM = histDataKGM.*vertcat(KGM_errorSigns{:});
 histogram(histDataKGM,edgesLog)
 ylim([0 50])
 %ylim([0 30])
+text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxKGMerrorFactor))),'FontSize',14)
 
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})
@@ -230,25 +264,50 @@ xlabel('K Difference Factor')
 ylabel('Counts')
 set(gca,'FontSize',14)
 
-subplot(2,3,5)
-title('TC Model')
-
-edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
-edges = 10.^edgesLog;
-
-hold on
-grid on
-box on
-grid minor
-
-histDataTC = log10(plottedTCerrorFactor);
-histDataTC = histDataTC.*vertcat(TC_errorSigns{:});
-histogram(histDataTC,edgesLog)
-ylim([0 50])
-%ylim([0 30])
-
-xticks([-2,-1,0,1,2])%in log space
-xticklabels({'-100','-10','0','10','100'})
-xlabel('K Difference Factor')
-ylabel('Counts')
-set(gca,'FontSize',14)
+% subplot(2,3,5)
+% title('TC Model 42.1 ms cutoff')
+% 
+% edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+% edges = 10.^edgesLog;
+% 
+% hold on
+% grid on
+% box on
+% grid minor
+% 
+% histDataTC = log10(plottedTCerrorFactor);
+% histDataTC = histDataTC.*vertcat(TC_errorSigns{:});
+% histogram(histDataTC,edgesLog)
+% ylim([0 50])
+% %ylim([0 30])
+% text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxTCerrorFactor))),'FontSize',14)
+% 
+% xticks([-2,-1,0,1,2])%in log space
+% xticklabels({'-100','-10','0','10','100'})
+% xlabel('K Difference Factor')
+% ylabel('Counts')
+% set(gca,'FontSize',14)
+% 
+% subplot(2,3,6)
+% title('TC Model 33 ms cutoff')
+% 
+% edgesLog = [-2 -1.5 -1 -0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6 0.8 1 1.5 2];
+% edges = 10.^edgesLog;
+% 
+% hold on
+% grid on
+% box on
+% grid minor
+% 
+% histDataTC = log10(plottedTCerrorFactor_ref);
+% histDataTC = histDataTC.*vertcat(TC_errorSigns_ref{:});
+% histogram(histDataTC,edgesLog)
+% ylim([0 50])
+% %ylim([0 30])
+% text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxTCerrorFactor_ref))),'FontSize',14)
+% 
+% xticks([-2,-1,0,1,2])%in log space
+% xticklabels({'-100','-10','0','10','100'})
+% xlabel('K Difference Factor')
+% ylabel('Counts')
+% set(gca,'FontSize',14)

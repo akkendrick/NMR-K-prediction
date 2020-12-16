@@ -53,6 +53,7 @@ for k = 1:length(siteList)
  
 end
 
+
 %%
 %TC model 42.1
 
@@ -71,7 +72,7 @@ for k = 1:length(siteList)
     TC_errorFactors{:,k} = TC_errorFactor;
     
 end
-%%
+
 %TC model 33
 
 TCm = [m m m m];
@@ -89,17 +90,13 @@ for k = 1:length(siteList)
     TC_errorFactors_ref{:,k} = TC_errorFactor;
     
 end
-%%
+
 %TC model opt
 
 TCm = [m m m m];
 TCn = [n n n n];
-%% THIS IS SLOW, DON'T RUN UNLESS NECESSARY
-clear totalkTC
-TC_gridSearch_wisc_opt;
 
-% %Fast version
-% load TC_opt_out
+TC_gridSearch_wisc_opt;
 %%
 cutoffOpt = [cutoff cutoff cutoff cutoff];
 cTCOpt = totalcMatrix;

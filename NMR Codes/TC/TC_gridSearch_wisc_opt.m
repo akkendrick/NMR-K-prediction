@@ -68,7 +68,7 @@ for j = 1:length(siteList)
 
     end
     
-    DPP_K{j} = K;
+%     DPP_K{j} = K;
     
     totalkTC{j,:} = kTC;
     totalmMatrix(j,:) = mTemp;
@@ -81,7 +81,7 @@ for j = 1:length(siteList)
 end
 toc
 
-save('TCout.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
+save('TC_opt_out.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 'totalErrorMatrix','totalmeanErrorFactorMatrix','totalmedianErrorFactorMatrix','cutoff','siteList','n','m')
 
 %%
@@ -89,26 +89,26 @@ save('TCout.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 %load('optimalCutoffTable_n2_m1_RMSE_2000.mat')
 %cutoff = (20:2:800)*10^-3;
 %totalmeanErrorFactorMatrix = totalErrorFactorMatrix;
-load('TCout.mat')
+load('TC_opt_out.mat')
 
 smoothWindow = 5;
 
 for kk = 1:length(siteList)
     
-    dataSmooth = smooth(totalmedianErrorFactorMatrix(kk,:),smoothWindow);
+%     dataSmooth = smooth(totalmedianErrorFactorMatrix(kk,:),smoothWindow);
     [minVal, index] = min(totalmedianErrorFactorMatrix(kk,:));
 
-    minVals(kk) = minVal;
-    minIndicies(kk) = index;
+    minVals(kk) = minVal
+    minIndicies(kk) = index
     
-    cutoff_ms = cutoff*10^3;
+    cutoff_ms = cutoff*10^3
     
     figure(1)
     subplot(2,2,kk)
     hold on
     plot(cutoff_ms,totalmedianErrorFactorMatrix(kk,:),'.')
  %   plot(cutoff_ms, dataSmooth,'LineWidth',2)
-    plot(cutoff_ms(index),dataSmooth(index),'k*','MarkerSize',10)
+    plot(cutoff_ms(index),totalmedianErrorFactorMatrix(kk,index),'k*','MarkerSize',10)
     legend(siteList{kk})
     grid on
     box on

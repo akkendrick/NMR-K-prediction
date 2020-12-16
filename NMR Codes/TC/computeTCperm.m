@@ -122,11 +122,11 @@ for k = 1:length(ind)
     freeT2dist(1:cutoffBin) = 0;
     freeT2dist(cutoffBin+1:nBins) = filtT2dist(k,cutoffBin+1:nBins);
     
-    BVI(k) = sum(boundT2dist);
+    BVI(k) = sum(boundT2dist)
     FFI(k) = sum(freeT2dist);     
     
     if BVI(k) == 0
-        BVI(k) = 0.01;
+        BVI(k) = 10;
     end
     
     if FFI(k) == 0

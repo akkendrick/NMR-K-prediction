@@ -129,9 +129,6 @@ hold on
     
 grid on
 box on
-plot(totalDPPK,totalDPPK,'k','LineWidth',2,'HandleVisibility','off')
-plot(totalDPPK,totalDPPK*10,'k:','HandleVisibility','off')
-plot(totalDPPK,totalDPPK*0.1,'k:','HandleVisibility','off')
 
 scatter(totalDPPK, totalSDRK,60,'Filled')
 scatter(totalDPPK, totalSeeversK,60,'Filled')
@@ -140,6 +137,10 @@ scatter(totalDPPK, totalSOEK,60,'Filled')
 scatter(totalDPPK, totalTCK,60,'Filled')
 
 legend('SDR','Seevers','KGM','SOE','TC','Location','northwest')
+
+plot(totalDPPK,totalDPPK,'k','LineWidth',2,'HandleVisibility','off')
+plot(totalDPPK,totalDPPK*10,'k:','HandleVisibility','off')
+plot(totalDPPK,totalDPPK*0.1,'k:','HandleVisibility','off')
 
 xlabel('DPP K (m/s)')
 ylabel('Estimated K (m/s)') 

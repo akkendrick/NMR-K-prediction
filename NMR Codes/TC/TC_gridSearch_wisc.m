@@ -93,7 +93,7 @@ for j = 1:length(siteList)
 end
 toc
 
-save('TCout.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
+save('TC_42_1_out.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 'totalErrorMatrix','totalmeanErrorFactorMatrix','totalmedianErrorFactorMatrix','cutoff','siteList','n','m')
 
 %%
@@ -101,7 +101,7 @@ save('TCout.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 %load('optimalCutoffTable_n2_m1_RMSE_2000.mat')
 %cutoff = (20:2:800)*10^-3;
 %totalmeanErrorFactorMatrix = totalErrorFactorMatrix;
-load('TCout.mat')
+load('TC_42_1_out.mat')
 
 smoothWindow = 5;
 

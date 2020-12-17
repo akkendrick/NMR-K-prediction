@@ -9,7 +9,7 @@ load enso
 %     {'Site1-WellG5below'} {'Site2-WellPN1'} {'Site2-WellPN2'}];
 
 siteList = [{"Site1-WellG5"},{"Site1-WellG6"},{"Site2-WellPN1"},{"Site2-WellPN2"}];
-%siteList = [{'Site2-WellPN2'}];
+%siteList = [{'Site2-WellPN1'}];
 
 offsets = [0.75,0.95,0.75,0.75];
 
@@ -81,7 +81,7 @@ for j = 1:length(siteList)
 end
 toc
 
-save('TC_opt_out.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
+save('TC_opt_out_BVI100.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 'totalErrorMatrix','totalmeanErrorFactorMatrix','totalmedianErrorFactorMatrix','cutoff','siteList','n','m')
 
 %%
@@ -89,7 +89,7 @@ save('TC_opt_out.mat','totalmMatrix','totalnMatrix','totalcMatrix',...
 %load('optimalCutoffTable_n2_m1_RMSE_2000.mat')
 %cutoff = (20:2:800)*10^-3;
 %totalmeanErrorFactorMatrix = totalErrorFactorMatrix;
-load('TC_opt_out.mat')
+load('TC_opt_out_BVI100.mat')
 
 smoothWindow = 5;
 

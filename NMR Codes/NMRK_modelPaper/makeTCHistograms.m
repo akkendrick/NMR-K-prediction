@@ -124,28 +124,27 @@ plottedTCerrorFactor = vertcat(TC_errorFactors{:});
 plottedTCerrorFactor_ref = vertcat(TC_errorFactors_ref{:});
 plottedSDRerrorFactor = vertcat(SDR_errorFactors{:});
 
-maxTCerrorFactor = max(plottedTCerrorFactor);
-maxTCerrorFactor_ref = max(plottedTCerrorFactor_ref);
-maxTCerrorFactor_opt = max(plottedTCerrorFactor_opt);
-maxSDRerrorFactor = max(plottedSDRerrorFactor);
+medianTCerrorFactor = median(plottedTCerrorFactor);
+medianTCerrorFactor_ref = median(plottedTCerrorFactor_ref);
+medianTCerrorFactor_opt = median(plottedTCerrorFactor_opt);
+medianSDRerrorFactor = median(plottedSDRerrorFactor);
 
 
 %%
 % Fix higher errors to make sure they show up on the plot, set +/-;
 
-plottedTCerrorFactor(plottedTCerrorFactor >= 100) = 200;
+plottedTCerrorFactor(plottedTCerrorFactor >= 100) = 60;
 %plottedTCerrorFactor = plottedTCerrorFactor.*vertcat(TC_errorSigns{:});
 
-plottedTCerrorFactor_ref(plottedTCerrorFactor_ref >= 100) = 200;
+plottedTCerrorFactor_ref(plottedTCerrorFactor_ref >= 100) = 60;
 
-plottedTCerrorFactor_opt(plottedTCerrorFactor_opt >= 100) = 200;
+plottedTCerrorFactor_opt(plottedTCerrorFactor_opt >= 100) = 60;
 
-plottedSDRerrorFactor(plottedSDRerrorFactor >= 100) = 200;
+plottedSDRerrorFactor(plottedSDRerrorFactor >= 100) = 60;
 %plottedSDRerrorFactor = plottedSDRerrorFactor.*vertcat(SDR_errorSigns{:});
-close(1)
 
 
-figure(1)
+figure()
 subplot(2,2,1)
 title('SDR Model')
 
@@ -163,7 +162,7 @@ histogram(histDataSDR,edgesLog)
 ylim([0 50])
 %ylim([0 30])
 
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSDRerrorFactor))),'FontSize',14)
+text(-1.2,40,strcat('Median K_{diff} = ',num2str(round(medianSDRerrorFactor))),'FontSize',14)
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})
 
@@ -184,7 +183,7 @@ histDataTC = histDataTC.*vertcat(TC_errorSigns{:});
 histogram(histDataTC,edgesLog)
 ylim([0 50])
 %ylim([0 30])
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxTCerrorFactor))),'FontSize',14)
+text(-1.2,40,strcat('Median K_{diff} = ',num2str(round(medianTCerrorFactor))),'FontSize',14)
 
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})
@@ -208,7 +207,7 @@ histDataTC = histDataTC.*vertcat(TC_errorSigns_ref{:});
 histogram(histDataTC,edgesLog)
 ylim([0 50])
 %ylim([0 30])
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxTCerrorFactor_ref))),'FontSize',14)
+text(-1.2,40,strcat('Median K_{diff} = ',num2str(round(medianTCerrorFactor_ref))),'FontSize',14)
 
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})
@@ -232,7 +231,7 @@ histDataTC = histDataTC.*vertcat(TC_errorSigns_opt{:});
 histogram(histDataTC,edgesLog)
 ylim([0 50])
 %ylim([0 30])
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxTCerrorFactor_opt))),'FontSize',14)
+text(-1.2,40,strcat('Median K_{diff} = ',num2str(round(medianTCerrorFactor_opt))),'FontSize',14)
 
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})

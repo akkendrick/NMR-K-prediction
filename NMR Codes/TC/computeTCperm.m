@@ -122,15 +122,16 @@ for k = 1:length(ind)
     freeT2dist(1:cutoffBin) = 0;
     freeT2dist(cutoffBin+1:nBins) = filtT2dist(k,cutoffBin+1:nBins);
     
-    BVI(k) = sum(boundT2dist)
+    BVI(k) = sum(boundT2dist);
+    
     FFI(k) = sum(freeT2dist);     
     
     if BVI(k) == 0
-        BVI(k) = 10;
+        BVI(k) = (randi(100)/1000)^randi(100);
     end
     
     if FFI(k) == 0
-        FFI(k) = 0.01;
+        FFI(k) = randi(100)*randi(100);
     end
     
     if figureson == 1
@@ -154,6 +155,7 @@ for k = 1:length(ind)
 
 end
 
+% cutoff
 % BVI
 % median(BVI)
 % mean(BVI)
@@ -197,7 +199,7 @@ bestFitMatrix(3,1) = median_m;
 
 lkTC_best = lkTC(median_c,median_m,median_n,logPhi,indexQuotient);
 kTC_best = 10.^lkTC_best;
-kTC_best
+kTC_best;
 
 %lkTC_Dlubac = kTC(1.6*10^-5,2,2,logPhi,indexQuotient);
 %kTC_Dlubac = 10.^lkTC_Dlubac;

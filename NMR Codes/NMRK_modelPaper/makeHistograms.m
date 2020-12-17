@@ -143,10 +143,10 @@ plottedSOEerrorFactor = vertcat(SOE_errorFactors{:});
 
 % maxTCerrorFactor = max(plottedTCerrorFactor)
 % maxTCerrorFactor_ref = max(plottedTCerrorFactor_ref)
-maxSDRerrorFactor = max(plottedSDRerrorFactor)
-maxSOEerrorFactor = max(plottedSOEerrorFactor)
-maxKGMerrorFactor = max(plottedKGMerrorFactor)
-maxSeeverserrorFactor = max(plottedSeeverserrorFactor)
+medianSDRerrorFactor = median(plottedSDRerrorFactor)
+medianSOEerrorFactor = median(plottedSOEerrorFactor)
+medianKGMerrorFactor = median(plottedKGMerrorFactor)
+medianSeeverserrorFactor = median(plottedSeeverserrorFactor)
 
 %%
 % Fix higher errors to make sure they show up on the plot, set +/-;
@@ -156,16 +156,16 @@ maxSeeverserrorFactor = max(plottedSeeverserrorFactor)
 % 
 % plottedTCerrorFactor_ref(plottedTCerrorFactor_ref >= 100) = 200;
 
-plottedSDRerrorFactor(plottedSDRerrorFactor >= 100) = 200;
+plottedSDRerrorFactor(plottedSDRerrorFactor >= 100) = 60;
 %plottedSDRerrorFactor = plottedSDRerrorFactor.*vertcat(SDR_errorSigns{:});
 
-plottedSeeverserrorFactor(plottedSeeverserrorFactor >= 100) = 200;
+plottedSeeverserrorFactor(plottedSeeverserrorFactor >= 100) = 60;
 %plottedSeeverserrorFactor = plottedSeeverserrorFactor.*vertcat(Seevers_errorSigns{:});
 
-plottedKGMerrorFactor(plottedKGMerrorFactor >= 100) = 200;
+plottedKGMerrorFactor(plottedKGMerrorFactor >= 100) = 60;
 %plottedKGMerrorFactor = plottedKGMerrorFactor.*vertcat(KGM_errorSigns{:});
 
-plottedSOEerrorFactor(plottedSOEerrorFactor >= 100) = 200;
+plottedSOEerrorFactor(plottedSOEerrorFactor >= 100) = 60;
 %plottedSOEerrorFactor = plottedSOEerrorFactor.*vertcat(SOE_errorSigns{:});
 
 figure(1)
@@ -186,7 +186,7 @@ histogram(histDataSDR,edgesLog)
 ylim([0 50])
 %ylim([0 30])
 
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSDRerrorFactor))),'FontSize',14)
+text(-1.9,40,strcat('Median K_{diff} = ',num2str(round(medianSDRerrorFactor))),'FontSize',14)
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})
 
@@ -204,7 +204,7 @@ hold on
 grid on
 box on
 grid minor
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSOEerrorFactor))),'FontSize',14)
+text(-1.9,40,strcat('Median K_{diff} = ',num2str(round(medianSOEerrorFactor))),'FontSize',14)
 histDataSOE = log10(plottedSOEerrorFactor);
 histDataSOE = histDataSOE.*vertcat(SOE_errorSigns{:});
 histogram(histDataSOE,edgesLog)
@@ -238,7 +238,7 @@ xticklabels({'-100','-10','0','10','100'})
 xlabel('K Difference Factor')
 ylabel('Counts')
 set(gca,'FontSize',14)
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxSeeverserrorFactor))),'FontSize',14)
+text(-1.9,40,strcat('Median K_{diff} = ',num2str(round(medianSeeverserrorFactor))),'FontSize',14)
 
 subplot(2,2,4)
 title('KGM Model')
@@ -256,7 +256,7 @@ histDataKGM = histDataKGM.*vertcat(KGM_errorSigns{:});
 histogram(histDataKGM,edgesLog)
 ylim([0 50])
 %ylim([0 30])
-text(-1.9,40,strcat('Max K_{diff} = ',num2str(round(maxKGMerrorFactor))),'FontSize',14)
+text(-1.9,40,strcat('Median K_{diff} = ',num2str(round(medianKGMerrorFactor))),'FontSize',14)
 
 xticks([-2,-1,0,1,2])%in log space
 xticklabels({'-100','-10','0','10','100'})

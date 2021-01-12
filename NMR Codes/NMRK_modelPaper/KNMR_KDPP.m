@@ -136,12 +136,13 @@ scatter(totalDPPK, totalKGMK,60,'Filled')
 scatter(totalDPPK, totalSOEK,60,'Filled')
 scatter(totalDPPK, totalTCK,60,'Filled')
 
-legend('SDR','Seevers','KGM','SOE','TC','Location','northwest')
+legend('SDR','Seevers','KGM','SOE','TC 42.1 ms cutoff','Location','northwest')
 
 plot(totalDPPK,totalDPPK,'k','LineWidth',2,'HandleVisibility','off')
 plot(totalDPPK,totalDPPK*10,'k:','HandleVisibility','off')
 plot(totalDPPK,totalDPPK*0.1,'k:','HandleVisibility','off')
 
+ylim([5*10^-8,1*10^0])
 xlabel('DPP K (m/s)')
 ylabel('Estimated K (m/s)') 
 

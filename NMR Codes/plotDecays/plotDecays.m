@@ -4,8 +4,8 @@ close all
 
 wisc_sites = {'Site1-WellG5','Site1-WellG6','Site2-WellPN1','Site2-WellPN2'};
 
-for k=1:length(wisc_sites)
-    site = wisc_sites(k);
+for m=1:length(wisc_sites)
+    site = wisc_sites(m);
    
     [decayCurves,decayTime] = loadRawDecays(site);
     [T2dist, T2logbins, siteName] = loadRawNMRdata(site);
@@ -27,21 +27,26 @@ for k=1:length(wisc_sites)
         currentT2dist = T2dist(k,:);
         % calculate decay curve from imported data
 
-        E0 = 1;
 
         T2linbins = 10.^T2logbins; 
-        sum = 0;
+        sumInv = 0;
         for j = 1:length(T2logbins)
             step = currentT2dist(j) .* exp(-decayTime/T2linbins(j));
-            sum = sum + step;
+            sumInv = sumInv + step;
             
         end
         
-        E_xy{k} = E0 * sum;
+        plotDecay = fliplr(decayCurves(k,:));
+
+        sumInv = sumInv./max(sumInv);
+        E0 = mean(plotDecay(1:20))/sumInv(1)
+        
+        E_xy{k} = E0 * sumInv;
         
         % normalize data
-        normE_xy{k} = E_xy{k}/max(E_xy{k});
-        plotDecay = fliplr(decayCurves(k,:)/max(decayCurves(k,:)));
+        %normE_xy{k} = E_xy{k}/max(E_xy{k});
+        
+        
         
         % make comparison plot
         
@@ -52,10 +57,10 @@ for k=1:length(wisc_sites)
         box on
         
         plot(decayTime, plotDecay, 'LineWidth',2)
-        plot(decayTime, normE_xy{k},'LineWidth', 2)
+        plot(decayTime, E_xy{k},'LineWidth', 2)
         
         xlabel('Time')
-        ylabel('Norm Amplitude')
+        ylabel('Amplitude')
         %set(gca, 'XDir','reverse')
         
         titleString = strcat(string(site),' z= ', string(depths(k)));

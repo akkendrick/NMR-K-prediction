@@ -7,14 +7,14 @@ wisc_sites = {'Site1-WellG5','Site1-WellG6','Site2-WellPN1','Site2-WellPN2'};
 for m=1:length(wisc_sites)
     site = wisc_sites(m);
    
-    [decayCurves,decayTime] = loadRawDecays(site);
-    [T2dist, T2logbins, siteName] = loadRawNMRdata(site);
+    [decayCurves,decayTime] = loadRawDecays(site);    
+    [T2dist,T2logbins,SEdecayTime,SEdecayUniform,SEdecay,oneDVectors,...
+        oneDVectorsUniform, nmrName] = loadAllRawNMRdata(site);   
     
-    [d, K, T2ML, phi{m}, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
-    SumEch_twm_3s] = loadnmrdata2(site{1});     
-    
+    NMRphi{m} = oneDVectors(:,2);
+
     % pull out depth intervals
-    depths = d;
+    depths = decayCurves(:,1);
     decayCurves = decayCurves(:,2:end);
     
     decayCurves = fliplr(decayCurves);
@@ -22,7 +22,7 @@ for m=1:length(wisc_sites)
     %decayTime = fliplr(decayTime);
     
     T2dist = T2dist(:,2:end);
-    sitePhi = phi{m};
+    sitePhi = NMRphi{m};
 
 
     for k = 1:length(depths)

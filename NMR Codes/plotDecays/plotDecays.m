@@ -11,10 +11,10 @@ for m=1:length(wisc_sites)
     [T2dist, T2logbins, siteName] = loadRawNMRdata(site);
     
     [d, K, T2ML, phi{m}, z, SumEch, logK, logT2ML, logPhi, SumEch_3s, SumEch_twm, ...
-    SumEch_twm_3s] = loadnmrdata2(site{m});     
+    SumEch_twm_3s] = loadnmrdata2(site{1});     
     
     % pull out depth intervals
-    depths = decayCurves(:,1);
+    depths = d;
     decayCurves = decayCurves(:,2:end);
     
     decayCurves = fliplr(decayCurves);
@@ -43,7 +43,7 @@ for m=1:length(wisc_sites)
         
         sumInv = sumInv./max(sumInv);
         
-        E0 = sitePhi(k)*100
+        E0 = sitePhi(k)*100;
         E_xy{k} = E0 * sumInv;
         
         % normalize data
